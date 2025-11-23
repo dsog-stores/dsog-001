@@ -2144,6 +2144,74 @@
             opacity: 1;
             visibility: visible;
         }
+        /* Franchise Location Selector */
+        .franchise-selector {
+            background: var(--bg-primary);
+            padding: 2rem 1.5rem;
+            text-align: center;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .franchise-selector h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.4rem;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+        
+        .franchise-options {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: nowrap;
+            max-width: 600px;
+            margin: 0 auto;
+            overflow-x: auto;
+            padding-bottom: 0.5rem;
+        }
+        
+        .franchise-option {
+            background: var(--white);
+            border: 2px solid var(--border-color);
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: var(--transition);
+            min-width: 140px;
+            text-align: center;
+            flex-shrink: 0;
+        }
+        
+        .franchise-option:hover {
+            border-color: var(--gold);
+            transform: translateY(-2px);
+        }
+        
+        .franchise-option.active {
+            border-color: var(--gold);
+            background: var(--gold);
+            color: var(--white);
+        }
+        
+        .franchise-name {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        
+        /* Remove franchise-manager styles as they're no longer needed */
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .franchise-options {
+                justify-content: flex-start;
+                padding-bottom: 1rem;
+            }
+            
+            .franchise-option {
+                min-width: 120px;
+                padding: 0.8rem 1rem;
+            }
+        }
     </style>
 </head>
 <body>
@@ -2198,21 +2266,18 @@
         </div>
     </header>
 
-    <!-- Franchise Location Selector -->
+     <!-- Franchise Location Selector -->
     <section class="franchise-selector" id="franchiseSelector">
         <h3>Select Your Local DSOG Store</h3>
         <div class="franchise-options">
             <div class="franchise-option active" data-location="nairobi">
                 <div class="franchise-name">Nairobi Store</div>
-                <div class="franchise-manager">Manager: John Maina</div>
             </div>
             <div class="franchise-option" data-location="mombasa">
                 <div class="franchise-name">Mombasa Store</div>
-                <div class="franchise-manager">Manager: Sarah Achieng</div>
             </div>
             <div class="franchise-option" data-location="kisumu">
                 <div class="franchise-name">Kisumu Store</div>
-                <div class="franchise-manager">Manager: Mike Otieno</div>
             </div>
         </div>
     </section>
