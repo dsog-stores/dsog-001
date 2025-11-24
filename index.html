@@ -412,6 +412,89 @@
             content: "Ksh ";
         }
         
+        /* Admin Panel Styles */
+        .admin-panel {
+            background: var(--medium-blue);
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid var(--accent-gold);
+        }
+        
+        .admin-section {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+        }
+        
+        .admin-section h4 {
+            color: var(--accent-gold);
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+        
+        .admin-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .admin-input-group {
+            margin-bottom: 10px;
+        }
+        
+        .admin-input-group label {
+            display: block;
+            color: var(--text-secondary);
+            margin-bottom: 5px;
+            font-size: 12px;
+        }
+        
+        .admin-input-group input, .admin-input-group textarea {
+            width: 100%;
+            padding: 8px;
+            border-radius: 4px;
+            border: 1px solid var(--light-pink);
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            box-sizing: border-box;
+        }
+        
+        .admin-input-group textarea {
+            height: 60px;
+            resize: vertical;
+        }
+        
+        .admin-btn {
+            background: var(--light-pink);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .admin-btn.secondary {
+            background: var(--soft-teal);
+            color: var(--dark-blue);
+        }
+        
+        .toggle-admin-btn {
+            background: var(--accent-gold);
+            color: var(--dark-blue);
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        
         /* Product Detail Modal */
         .modal-overlay {
             position: fixed;
@@ -630,6 +713,10 @@
             .modal-image {
                 height: 250px;
             }
+            
+            .admin-grid {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
@@ -653,6 +740,93 @@
                 <div id="date">Friday, June 10, 2023</div>
             </div>
         </nav>
+        
+        <!-- Admin Panel -->
+        <button class="toggle-admin-btn" id="toggleAdminBtn">👤 Show Admin Panel</button>
+        <div class="admin-panel" id="adminPanel" style="display: none;">
+            <h3 style="color: var(--accent-gold); margin-bottom: 20px;">🎛️ Admin Dashboard - Update All Content</h3>
+            
+            <!-- Metrics Section -->
+            <div class="admin-section">
+                <h4>📊 Key Metrics</h4>
+                <div class="admin-grid">
+                    <div class="admin-input-group">
+                        <label>Weekly Sales (Ksh)</label>
+                        <input type="number" id="adminWeeklySales" placeholder="14285">
+                    </div>
+                    <div class="admin-input-group">
+                        <label>Growth %</label>
+                        <input type="number" id="adminGrowth" placeholder="12">
+                    </div>
+                    <div class="admin-input-group">
+                        <label>Products Sold</label>
+                        <input type="number" id="adminProductsSold" placeholder="117">
+                    </div>
+                    <div class="admin-input-group">
+                        <label>Days Remaining</label>
+                        <input type="number" id="adminDaysRemaining" placeholder="4">
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Weekly Stats -->
+            <div class="admin-section">
+                <h4>🏪 Store Statistics</h4>
+                <div class="admin-grid">
+                    <div class="admin-input-group">
+                        <label>Active Franchises</label>
+                        <input type="number" id="adminFranchises" placeholder="8">
+                    </div>
+                    <div class="admin-input-group">
+                        <label>Staff Members</label>
+                        <input type="number" id="adminStaff" placeholder="24">
+                    </div>
+                    <div class="admin-input-group">
+                        <label>Pending Deliveries</label>
+                        <input type="number" id="adminDeliveries" placeholder="3">
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Sales Target -->
+            <div class="admin-section">
+                <h4>🎯 Sales Target</h4>
+                <div class="admin-grid">
+                    <div class="admin-input-group">
+                        <label>Weekly Target (Ksh)</label>
+                        <input type="number" id="adminWeeklyTarget" placeholder="22000">
+                    </div>
+                    <div class="admin-input-group">
+                        <label>Daily Sales (Mon-Sun, comma separated)</label>
+                        <input type="text" id="adminDailySales" placeholder="2100,3200,2800,3900,2285,0,0">
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Best Selling Products -->
+            <div class="admin-section">
+                <h4>🔥 Best Selling Products</h4>
+                <div id="bestSellingProductsAdmin">
+                    <!-- Will be populated by JavaScript -->
+                </div>
+                <button class="admin-btn secondary" onclick="addProduct('bestSelling')">+ Add Product</button>
+            </div>
+            
+            <!-- New Arrivals -->
+            <div class="admin-section">
+                <h4>🆕 New Arrivals</h4>
+                <div id="newArrivalsAdmin">
+                    <!-- Will be populated by JavaScript -->
+                </div>
+                <button class="admin-btn secondary" onclick="addProduct('newArrivals')">+ Add Product</button>
+            </div>
+            
+            <div style="margin-top: 20px;">
+                <button class="admin-btn" onclick="updateAllData()">💾 Update All Data</button>
+                <button class="admin-btn secondary" onclick="loadCurrentData()">🔄 Load Current Data</button>
+                <button class="admin-btn secondary" onclick="resetToDefault()">🔄 Reset to Default</button>
+            </div>
+        </div>
         
         <div class="dashboard">
             <div class="metrics-grid">
@@ -783,99 +957,8 @@
                 <div class="section-header">
                     <h2 class="section-title">Best Selling Products This Week</h2>
                 </div>
-                <div class="products-grid">
-                    <div class="product-card" id="productCard1" data-product='{
-                        "name": "Epitome White T-Shirt",
-                        "category": "Accessories",
-                        "price": "249",
-                        "image": "https://i.postimg.cc/pV6QC3YQ/Whats-App-Image-2025-11-15-at-14-13-23.jpg",
-                        "sold": "42",
-                        "total": "10458",
-                        "description": "Premium quality cotton t-shirt with unique graphic print. Comfortable fit for everyday wear. Available in multiple sizes and colors.",
-                        "stock": "28",
-                        "rating": "4.8",
-                        "reviews": "36"
-                    }'>
-                        <div class="product-image" style="background-image: url('https://i.postimg.cc/pV6QC3YQ/Whats-App-Image-2025-11-15-at-14-13-23.jpg')"></div>
-                        <div class="product-info">
-                            <span class="product-category">Accessories</span>
-                            <h3 class="product-name">Epitome T-Shirt</h3>
-                            <div class="product-price currency">249</div>
-                            <div class="product-meta">
-                                <span>Sold: 42 units</span>
-                                <span>Total: <span class="currency">10,458</span></span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="product-card" id="productCard2" data-product='{
-                        "name": "Designer Tote",
-                        "category": "Handbags",
-                        "price": "189",
-                        "image": "https://i.postimg.cc/ZYLyPd6Y/20251112-1350-Tote-Bag-Design-remix-01k9vtxhf1emf82tj6vvectsjk.webp",
-                        "sold": "28",
-                        "total": "5292",
-                        "description": "Elegant and spacious tote bag made from sustainable materials. Features multiple compartments and sturdy handles.",
-                        "stock": "15",
-                        "rating": "4.6",
-                        "reviews": "24"
-                    }'>
-                        <div class="product-image" style="background-image: url('https://i.postimg.cc/ZYLyPd6Y/20251112-1350-Tote-Bag-Design-remix-01k9vtxhf1emf82tj6vvectsjk.webp')"></div>
-                        <div class="product-info">
-                            <span class="product-category">Handbags</span>
-                            <h3 class="product-name">Designer Tote</h3>
-                            <div class="product-price currency">189</div>
-                            <div class="product-meta">
-                                <span>Sold: 28 units</span>
-                                <span>Total: <span class="currency">5,292</span></span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="product-card" id="productCard3" data-product='{
-                        "name": "Ceramic Vase",
-                        "category": "Home Decor",
-                        "price": "85",
-                        "image": "https://images.unsplash.com/photo-1584917865442-de89df76afd3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80",
-                        "sold": "35",
-                        "total": "2975",
-                        "description": "Handcrafted ceramic vase with a unique glazed finish. Perfect for fresh flowers or as a standalone decorative piece.",
-                        "stock": "12",
-                        "rating": "4.9",
-                        "reviews": "41"
-                    }'>
-                        <div class="product-image" style="background-image: url('https://images.unsplash.com/photo-1584917865442-de89df76afd3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80')"></div>
-                        <div class="product-info">
-                            <span class="product-category">Home Decor</span>
-                            <h3 class="product-name">Ceramic Vase</h3>
-                            <div class="product-price currency">85</div>
-                            <div class="product-meta">
-                                <span>Sold: 35 units</span>
-                                <span>Total: <span class="currency">2,975</span></span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="product-card" id="productCard4" data-product='{
-                        "name": "Gold Necklace",
-                        "category": "Jewelry",
-                        "price": "320",
-                        "image": "https://images.unsplash.com/photo-1588099768531-a72d4a198538?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80",
-                        "sold": "12",
-                        "total": "3840",
-                        "description": "Elegant 18k gold necklace with a delicate pendant. A timeless piece that complements any outfit.",
-                        "stock": "8",
-                        "rating": "4.7",
-                        "reviews": "19"
-                    }'>
-                        <div class="product-image" style="background-image: url('https://images.unsplash.com/photo-1588099768531-a72d4a198538?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80')"></div>
-                        <div class="product-info">
-                            <span class="product-category">Jewelry</span>
-                            <h3 class="product-name">Gold Necklace</h3>
-                            <div class="product-price currency">320</div>
-                            <div class="product-meta">
-                                <span>Sold: 12 units</span>
-                                <span>Total: <span class="currency">3,840</span></span>
-                            </div>
-                        </div>
-                    </div>
+                <div class="products-grid" id="bestSellingProducts">
+                    <!-- Will be populated by JavaScript -->
                 </div>
             </div>
             
@@ -884,103 +967,8 @@
                 <div class="section-header">
                     <h2 class="section-title">New Arrivals</h2>
                 </div>
-                <div class="products-grid">
-                    <div class="product-card" id="newArrivalCard1" data-product='{
-                        "name": "Summer Dress",
-                        "category": "Fashion",
-                        "price": "79",
-                        "image": "https://images.unsplash.com/photo-1496747611176-843222e1e57c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80",
-                        "sold": "0",
-                        "total": "0",
-                        "description": "Light and flowy summer dress with floral pattern. Perfect for warm weather and special occasions.",
-                        "stock": "25",
-                        "rating": "New",
-                        "reviews": "0"
-                    }'>
-                        <div class="product-image" style="background-image: url('https://images.unsplash.com/photo-1496747611176-843222e1e57c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80')"></div>
-                        <div class="product-info">
-                            <span class="product-category">Fashion</span>
-                            <span class="new-arrival-badge">New!</span>
-                            <h3 class="product-name">Summer Dress</h3>
-                            <div class="product-price currency">79</div>
-                            <div class="product-meta">
-                                <span>Available: 25</span>
-                                <span>Just arrived</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="product-card" id="newArrivalCard2" data-product='{
-                        "name": "Decorative Pillow",
-                        "category": "Home",
-                        "price": "45",
-                        "image": "https://images.unsplash.com/photo-1505843490537-8de44d869c18?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80",
-                        "sold": "0",
-                        "total": "0",
-                        "description": "Soft and luxurious decorative pillow with intricate embroidery. Adds a touch of elegance to any room.",
-                        "stock": "40",
-                        "rating": "New",
-                        "reviews": "0"
-                    }'>
-                        <div class="product-image" style="background-image: url('https://images.unsplash.com/photo-1505843490537-8de44d869c18?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80')"></div>
-                        <div class="product-info">
-                            <span class="product-category">Home</span>
-                            <span class="new-arrival-badge">New!</span>
-                            <h3 class="product-name">Decorative Pillow</h3>
-                            <div class="product-price currency">45</div>
-                            <div class="product-meta">
-                                <span>Available: 40</span>
-                                <span>Just arrived</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="product-card" id="newArrivalCard3" data-product='{
-                        "name": "Designer Heels",
-                        "category": "Shoes",
-                        "price": "155",
-                        "image": "https://images.unsplash.com/photo-1611312449408-fcece27cdbb7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwa90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80",
-                        "sold": "0",
-                        "total": "0",
-                        "description": "Elegant designer heels with comfortable insoles and secure fastening. Perfect for both day and evening wear.",
-                        "stock": "18",
-                        "rating": "New",
-                        "reviews": "0"
-                    }'>
-                        <div class="product-image" style="background-image: url('https://images.unsplash.com/photo-1611312449408-fcece27cdbb7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwa90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80')"></div>
-                        <div class="product-info">
-                            <span class="product-category">Shoes</span>
-                            <span class="new-arrival-badge">New!</span>
-                            <h3 class="product-name">Designer Heels</h3>
-                            <div class="product-price currency">155</div>
-                            <div class="product-meta">
-                                <span>Available: 18</span>
-                                <span>Just arrived</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="product-card" id="newArrivalCard4" data-product='{
-                        "name": "Luxury Perfume",
-                        "category": "Fragrance",
-                        "price": "125",
-                        "image": "https://images.unsplash.com/photo-1601924994987-69e26d50dc26?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwa90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80",
-                        "sold": "0",
-                        "total": "0",
-                        "description": "Luxury fragrance with notes of jasmine, sandalwood, and vanilla. Long-lasting scent that evolves throughout the day.",
-                        "stock": "30",
-                        "rating": "New",
-                        "reviews": "0"
-                    }'>
-                        <div class="product-image" style="background-image: url('https://images.unsplash.com/photo-1601924994987-69e26d50dc26?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwa90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80')"></div>
-                        <div class="product-info">
-                            <span class="product-category">Fragrance</span>
-                            <span class="new-arrival-badge">New!</span>
-                            <h3 class="product-name">Luxury Perfume</h3>
-                            <div class="product-price currency">125</div>
-                            <div class="product-meta">
-                                <span>Available: 30</span>
-                                <span>Just arrived</span>
-                            </div>
-                        </div>
-                    </div>
+                <div class="products-grid" id="newArrivalsProducts">
+                    <!-- Will be populated by JavaScript -->
                 </div>
             </div>
         </div>
@@ -1021,238 +1009,547 @@
         </div>
     </div>
 
-   <!-- Remove ALL other script tags and replace with this SINGLE script section: -->
-<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 
-<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
-
-<script>
-    // Your Firebase configuration
-    const firebaseConfig = {
-        apiKey: "AIzaSyCOb4BqfiN3vt1Y13UTEpA_boCqNRH6rrQ",
-        authDomain: "dsog-stores-dashboard.firebaseapp.com",
-        databaseURL: "https://dsog-stores-dashboard-default-rtdb.firebaseio.com",
-        projectId: "dsog-stores-dashboard",
-        storageBucket: "dsog-stores-dashboard.firebasestorage.app",
-        messagingSenderId: "1085972125142",
-        appId: "1:1085972125142:web:9abea9ee0dd792a052c077"
-    };
-
-    // Initialize Firebase
-    firebase.initializeApp(firebaseConfig);
-    const database = firebase.database();
-
-    // Listen for real-time updates
-    database.ref('dashboard').on('value', (snapshot) => {
-        const data = snapshot.val();
-        if (data) {
-            updateDashboard(data);
-        }
-    });
-
-    function updateTestData() {
-        const weeklySales = parseInt(document.getElementById('testWeeklySales').value) || 14285;
-        const growth = parseInt(document.getElementById('testGrowth').value) || 12;
-        const productsSold = parseInt(document.getElementById('testProductsSold').value) || 117;
-        
-        const testData = {
-            weeklySales: weeklySales,
-            growth: growth,
-            productsSold: productsSold,
-            dailySales: [2100, 3200, 2800, 3900, 2285, 0, 0],
-            lastUpdated: new Date().toLocaleString()
+    <script>
+        // Your Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyCOb4BqfiN3vt1Y13UTEpA_boCqNRH6rrQ",
+            authDomain: "dsog-stores-dashboard.firebaseapp.com",
+            databaseURL: "https://dsog-stores-dashboard-default-rtdb.firebaseio.com",
+            projectId: "dsog-stores-dashboard",
+            storageBucket: "dsog-stores-dashboard.firebasestorage.app",
+            messagingSenderId: "1085972125142",
+            appId: "1:1085972125142:web:9abea9ee0dd792a052c077"
         };
-        
-        database.ref('dashboard').set(testData)
-            .then(() => {
-                alert('✅ Data updated! Open another browser to test real-time updates.');
-            })
-            .catch((error) => {
-                alert('❌ Error: ' + error.message);
-            });
-    }
 
-    function updateDashboard(data) {
-        // Update the metrics
-        document.querySelector('#metricCard1 .metric-value').textContent = data.weeklySales.toLocaleString();
-        document.querySelector('#metricCard2 .metric-value').textContent = `+${data.growth}%`;
-        document.querySelector('#metricCard4 .metric-value').textContent = data.productsSold;
-        
-        // Update progress bar
-        const target = 22000;
-        const progress = (data.weeklySales / target) * 100;
-        const progressBar = document.getElementById('progressBar');
-        progressBar.style.width = `${progress}%`;
-        progressBar.querySelector('.progress-text').textContent = `${Math.round(progress)}%`;
-        
-        // Update target details
-        const targetDetails = document.querySelector('.target-details');
-        targetDetails.children[0].innerHTML = `Current: <span class="currency">${data.weeklySales.toLocaleString()}</span>`;
-        targetDetails.children[2].innerHTML = `Remaining: <span class="currency">${(target - data.weeklySales).toLocaleString()}</span>`;
-    }
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
 
-    // Your existing clock and animation code
-    document.addEventListener('DOMContentLoaded', function() {
-        // Add admin panel using DOM insertion (safe method)
-        const adminPanelHTML = `
-            <div style="background: #172a45; padding: 15px; border-radius: 8px; margin: 20px 0;">
-                <h3 style="color: #ff6b8b; margin-bottom: 15px;">🧪 TEST MODE - Update Dashboard</h3>
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin-bottom: 15px;">
-                    <div>
-                        <label style="color: #b8b8d1; display: block; margin-bottom: 5px;">Weekly Sales</label>
-                        <input type="number" id="testWeeklySales" placeholder="14285" style="width: 100%; padding: 8px; border-radius: 4px; border: 1px solid #ff6b8b; background: rgba(255,255,255,0.1); color: white;">
-                    </div>
-                    <div>
-                        <label style="color: #b8b8d1; display: block; margin-bottom: 5px;">Growth %</label>
-                        <input type="number" id="testGrowth" placeholder="12" style="width: 100%; padding: 8px; border-radius: 4px; border: 1px solid #ff6b8b; background: rgba(255,255,255,0.1); color: white;">
-                    </div>
-                    <div>
-                        <label style="color: #b8b8d1; display: block; margin-bottom: 5px;">Products Sold</label>
-                        <input type="number" id="testProductsSold" placeholder="117" style="width: 100%; padding: 8px; border-radius: 4px; border: 1px solid #ff6b8b; background: rgba(255,255,255,0.1); color: white;">
-                    </div>
-                </div>
-                <button onclick="updateTestData()" style="background: #ff6b8b; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer;">Update Dashboard</button>
-            </div>
-        `;
-        
-        // Insert admin panel after the navigation
-        const topNav = document.querySelector('.top-nav');
-        if (topNav) {
-            topNav.insertAdjacentHTML('afterend', adminPanelHTML);
-        }
+        // Default data structure
+        const defaultData = {
+            metrics: {
+                weeklySales: 14285,
+                growth: 12,
+                daysRemaining: 4,
+                productsSold: 117
+            },
+            stats: {
+                franchises: 8,
+                staff: 24,
+                deliveries: 3
+            },
+            target: {
+                weeklyTarget: 22000,
+                dailySales: [2100, 3200, 2800, 3900, 2285, 0, 0]
+            },
+            bestSellingProducts: [
+                {
+                    id: 1,
+                    name: "Epitome White T-Shirt",
+                    category: "Accessories",
+                    price: "249",
+                    image: "https://i.postimg.cc/pV6QC3YQ/Whats-App-Image-2025-11-15-at-14-13-23.jpg",
+                    sold: "42",
+                    total: "10458",
+                    description: "Premium quality cotton t-shirt with unique graphic print. Comfortable fit for everyday wear. Available in multiple sizes and colors.",
+                    stock: "28",
+                    rating: "4.8",
+                    reviews: "36"
+                },
+                {
+                    id: 2,
+                    name: "Designer Tote",
+                    category: "Handbags",
+                    price: "189",
+                    image: "https://i.postimg.cc/ZYLyPd6Y/20251112-1350-Tote-Bag-Design-remix-01k9vtxhf1emf82tj6vvectsjk.webp",
+                    sold: "28",
+                    total: "5292",
+                    description: "Elegant and spacious tote bag made from sustainable materials. Features multiple compartments and sturdy handles.",
+                    stock: "15",
+                    rating: "4.6",
+                    reviews: "24"
+                },
+                {
+                    id: 3,
+                    name: "Ceramic Vase",
+                    category: "Home Decor",
+                    price: "85",
+                    image: "https://images.unsplash.com/photo-1584917865442-de89df76afd3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80",
+                    sold: "35",
+                    total: "2975",
+                    description: "Handcrafted ceramic vase with a unique glazed finish. Perfect for fresh flowers or as a standalone decorative piece.",
+                    stock: "12",
+                    rating: "4.9",
+                    reviews: "41"
+                },
+                {
+                    id: 4,
+                    name: "Gold Necklace",
+                    category: "Jewelry",
+                    price: "320",
+                    image: "https://images.unsplash.com/photo-1588099768531-a72d4a198538?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80",
+                    sold: "12",
+                    total: "3840",
+                    description: "Elegant 18k gold necklace with a delicate pendant. A timeless piece that complements any outfit.",
+                    stock: "8",
+                    rating: "4.7",
+                    reviews: "19"
+                }
+            ],
+            newArrivals: [
+                {
+                    id: 1,
+                    name: "Summer Dress",
+                    category: "Fashion",
+                    price: "79",
+                    image: "https://images.unsplash.com/photo-1496747611176-843222e1e57c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80",
+                    sold: "0",
+                    total: "0",
+                    description: "Light and flowy summer dress with floral pattern. Perfect for warm weather and special occasions.",
+                    stock: "25",
+                    rating: "New",
+                    reviews: "0"
+                },
+                {
+                    id: 2,
+                    name: "Decorative Pillow",
+                    category: "Home",
+                    price: "45",
+                    image: "https://images.unsplash.com/photo-1505843490537-8de44d869c18?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80",
+                    sold: "0",
+                    total: "0",
+                    description: "Soft and luxurious decorative pillow with intricate embroidery. Adds a touch of elegance to any room.",
+                    stock: "40",
+                    rating: "New",
+                    reviews: "0"
+                },
+                {
+                    id: 3,
+                    name: "Designer Heels",
+                    category: "Shoes",
+                    price: "155",
+                    image: "https://images.unsplash.com/photo-1611312449408-fcece27cdbb7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwa90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80",
+                    sold: "0",
+                    total: "0",
+                    description: "Elegant designer heels with comfortable insoles and secure fastening. Perfect for both day and evening wear.",
+                    stock: "18",
+                    rating: "New",
+                    reviews: "0"
+                },
+                {
+                    id: 4,
+                    name: "Luxury Perfume",
+                    category: "Fragrance",
+                    price: "125",
+                    image: "https://images.unsplash.com/photo-1601924994987-69e26d50dc26?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwa90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80",
+                    sold: "0",
+                    total: "0",
+                    description: "Luxury fragrance with notes of jasmine, sandalwood, and vanilla. Long-lasting scent that evolves throughout the day.",
+                    stock: "30",
+                    rating: "New",
+                    reviews: "0"
+                }
+            ]
+        };
 
-        // Clock functionality
-        function updateClock() {
-            const now = new Date();
-            let hours = now.getHours();
-            const ampm = hours >= 12 ? 'PM' : 'AM';
-            hours = hours % 12;
-            hours = hours ? hours : 12;
-            const minutes = now.getMinutes().toString().padStart(2, '0');
+        document.addEventListener('DOMContentLoaded', function() {
+            // Admin panel toggle
+            const adminPanel = document.getElementById('adminPanel');
+            const toggleAdminBtn = document.getElementById('toggleAdminBtn');
             
-            document.getElementById('time').textContent = `${hours}:${minutes} ${ampm}`;
-            
-            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-            document.getElementById('date').textContent = now.toLocaleDateString('en-US', options);
-        }
-        
-        updateClock();
-        setInterval(updateClock, 60000);
-
-        // Animation observer
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add("visible");
-                    
-                    // Animate product cards sequentially
-                    if (entry.target.id === "productsSection" || entry.target.id === "newArrivalsSection") {
-                        const sectionId = entry.target.id;
-                        const productCards = [
-                            document.getElementById(`${sectionId === "productsSection" ? "productCard" : "newArrivalCard"}1`),
-                            document.getElementById(`${sectionId === "productsSection" ? "productCard" : "newArrivalCard"}2`),
-                            document.getElementById(`${sectionId === "productsSection" ? "productCard" : "newArrivalCard"}3`),
-                            document.getElementById(`${sectionId === "productsSection" ? "productCard" : "newArrivalCard"}4`)
-                        ];
-                        
-                        productCards.forEach((card, index) => {
-                            setTimeout(() => {
-                                if (card) card.classList.add("visible");
-                            }, index * 150);
-                        });
-                    }
-                    
-                    // Animate sales bars if it's the target card
-                    if (entry.target.id === "targetCard") {
-                        animateSalesBars();
-                    }
+            toggleAdminBtn.addEventListener('click', function() {
+                if (adminPanel.style.display === 'none') {
+                    adminPanel.style.display = 'block';
+                    this.textContent = '👤 Hide Admin Panel';
+                    loadCurrentData();
+                } else {
+                    adminPanel.style.display = 'none';
+                    this.textContent = '👤 Show Admin Panel';
                 }
             });
-        }, { threshold: 0.1 });
 
-        // Observe elements
-        [
-            document.getElementById("metricCard1"), document.getElementById("metricCard2"), 
-            document.getElementById("metricCard3"), document.getElementById("metricCard4"),
-            document.getElementById("targetCard"), document.getElementById("statCard1"),
-            document.getElementById("statCard2"), document.getElementById("statCard3"),
-            document.getElementById("productsSection"), document.getElementById("newArrivalsSection")
-        ].forEach(el => { 
-            if (el) observer.observe(el); 
-        });
-
-        // Product modal functionality
-        const productModal = document.getElementById('productModal');
-        const modalClose = document.getElementById('modalClose');
-        const modalImage = document.getElementById('modalImage');
-        const modalCategory = document.getElementById('modalCategory');
-        const modalTitle = document.getElementById('modalTitle');
-        const modalPrice = document.getElementById('modalPrice');
-        const modalDescription = document.getElementById('modalDescription');
-        const modalSold = document.getElementById('modalSold');
-        const modalStock = document.getElementById('modalStock');
-        const modalRating = document.getElementById('modalRating');
-        const modalReviews = document.getElementById('modalReviews');
-        
-        // Add click event to all product cards
-        document.querySelectorAll('.product-card').forEach(card => {
-            card.addEventListener('click', function() {
-                const productData = JSON.parse(this.getAttribute('data-product'));
-                
-                // Populate modal with product data
-                modalImage.style.backgroundImage = `url('${productData.image}')`;
-                modalCategory.textContent = productData.category;
-                modalTitle.textContent = productData.name;
-                modalPrice.textContent = productData.price;
-                modalDescription.textContent = productData.description;
-                modalSold.textContent = productData.sold + (productData.sold > 0 ? ' units' : '');
-                modalStock.textContent = productData.stock + ' available';
-                modalRating.textContent = productData.rating;
-                modalReviews.textContent = productData.reviews;
-                
-                // Show modal
-                productModal.classList.add('active');
-                document.body.style.overflow = 'hidden';
+            // Listen for real-time updates
+            database.ref('dashboard').on('value', (snapshot) => {
+                const data = snapshot.val();
+                if (data) {
+                    updateEntireDashboard(data);
+                } else {
+                    // Initialize with default data if no data exists
+                    database.ref('dashboard').set(defaultData);
+                }
             });
-        });
-        
-        // Close modal
-        modalClose.addEventListener('click', function() {
-            productModal.classList.remove('active');
-            document.body.style.overflow = 'auto';
-        });
-        
-        // Close modal when clicking outside
-        productModal.addEventListener('click', function(e) {
-            if (e.target === productModal) {
-                productModal.classList.remove('active');
-                document.body.style.overflow = 'auto';
+
+            // Clock functionality
+            function updateClock() {
+                const now = new Date();
+                let hours = now.getHours();
+                const ampm = hours >= 12 ? 'PM' : 'AM';
+                hours = hours % 12;
+                hours = hours ? hours : 12;
+                const minutes = now.getMinutes().toString().padStart(2, '0');
+                
+                document.getElementById('time').textContent = `${hours}:${minutes} ${ampm}`;
+                
+                const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+                document.getElementById('date').textContent = now.toLocaleDateString('en-US', options);
             }
-        });
-        
-        // Animate sales bars
-        function animateSalesBars() {
-            const salesBars = document.querySelectorAll('.sales-bar');
-            const maxValue = 4000;
             
-            salesBars.forEach(bar => {
-                const value = parseInt(bar.getAttribute('data-value'));
+            updateClock();
+            setInterval(updateClock, 60000);
+
+            // Animation observer
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add("visible");
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            [document.getElementById("metricCard1"), document.getElementById("metricCard2"), 
+             document.getElementById("metricCard3"), document.getElementById("metricCard4"),
+             document.getElementById("targetCard"), document.getElementById("statCard1"),
+             document.getElementById("statCard2"), document.getElementById("statCard3"),
+             document.getElementById("productsSection"), document.getElementById("newArrivalsSection")]
+            .forEach(el => { if (el) observer.observe(el); });
+
+            // Product modal functionality
+            const productModal = document.getElementById('productModal');
+            const modalClose = document.getElementById('modalClose');
+            const modalImage = document.getElementById('modalImage');
+            const modalCategory = document.getElementById('modalCategory');
+            const modalTitle = document.getElementById('modalTitle');
+            const modalPrice = document.getElementById('modalPrice');
+            const modalDescription = document.getElementById('modalDescription');
+            const modalSold = document.getElementById('modalSold');
+            const modalStock = document.getElementById('modalStock');
+            const modalRating = document.getElementById('modalRating');
+            const modalReviews = document.getElementById('modalReviews');
+            
+            // Product click will be handled by dynamic product rendering
+        });
+
+        // Update entire dashboard with new data
+        function updateEntireDashboard(data) {
+            // Update metrics
+            document.querySelector('#metricCard1 .metric-value').textContent = formatNumber(data.metrics.weeklySales);
+            document.querySelector('#metricCard2 .metric-value').textContent = `+${data.metrics.growth}%`;
+            document.querySelector('#metricCard3 .metric-value').textContent = data.metrics.daysRemaining;
+            document.querySelector('#metricCard4 .metric-value').textContent = data.metrics.productsSold;
+            
+            // Update stats
+            document.querySelector('#statCard1 .stat-value').textContent = data.stats.franchises;
+            document.querySelector('#statCard2 .stat-value').textContent = data.stats.staff;
+            document.querySelector('#statCard3 .stat-value').textContent = data.stats.deliveries;
+            
+            // Update target section
+            const progress = (data.metrics.weeklySales / data.target.weeklyTarget) * 100;
+            const progressBar = document.getElementById('progressBar');
+            progressBar.style.width = `${progress}%`;
+            progressBar.querySelector('.progress-text').textContent = `${Math.round(progress)}%`;
+            
+            const targetDetails = document.querySelector('.target-details');
+            targetDetails.children[0].innerHTML = `Current: <span class="currency">${formatNumber(data.metrics.weeklySales)}</span>`;
+            targetDetails.children[1].innerHTML = `Target: <span class="currency">${formatNumber(data.target.weeklyTarget)}</span>`;
+            targetDetails.children[2].innerHTML = `Remaining: <span class="currency">${formatNumber(data.target.weeklyTarget - data.metrics.weeklySales)}</span>`;
+            
+            // Update sales bars
+            updateSalesBars(data.target.dailySales);
+            
+            // Update products
+            renderProducts(data.bestSellingProducts, 'bestSellingProducts');
+            renderProducts(data.newArrivals, 'newArrivalsProducts');
+        }
+
+        // Render products to the page
+        function renderProducts(products, containerId) {
+            const container = document.getElementById(containerId);
+            if (!container) return;
+            
+            let html = '';
+            products.forEach((product, index) => {
+                html += `
+                    <div class="product-card" id="${containerId.slice(0, -1)}${index + 1}" data-product='${JSON.stringify(product)}'>
+                        <div class="product-image" style="background-image: url('${product.image}')"></div>
+                        <div class="product-info">
+                            <span class="product-category">${product.category}</span>
+                            ${containerId === 'newArrivalsProducts' ? '<span class="new-arrival-badge">New!</span>' : ''}
+                            <h3 class="product-name">${product.name}</h3>
+                            <div class="product-price currency">${product.price}</div>
+                            <div class="product-meta">
+                                <span>${product.sold > 0 ? `Sold: ${product.sold} units` : `Available: ${product.stock}`}</span>
+                                <span>Total: <span class="currency">${product.total}</span></span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = html;
+            
+            // Re-attach click events to product cards
+            document.querySelectorAll('.product-card').forEach(card => {
+                card.addEventListener('click', function() {
+                    const productData = JSON.parse(this.getAttribute('data-product'));
+                    showProductModal(productData);
+                });
+            });
+        }
+
+        // Show product modal
+        function showProductModal(productData) {
+            const modalImage = document.getElementById('modalImage');
+            const modalCategory = document.getElementById('modalCategory');
+            const modalTitle = document.getElementById('modalTitle');
+            const modalPrice = document.getElementById('modalPrice');
+            const modalDescription = document.getElementById('modalDescription');
+            const modalSold = document.getElementById('modalSold');
+            const modalStock = document.getElementById('modalStock');
+            const modalRating = document.getElementById('modalRating');
+            const modalReviews = document.getElementById('modalReviews');
+            const productModal = document.getElementById('productModal');
+            
+            modalImage.style.backgroundImage = `url('${productData.image}')`;
+            modalCategory.textContent = productData.category;
+            modalTitle.textContent = productData.name;
+            modalPrice.textContent = productData.price;
+            modalDescription.textContent = productData.description;
+            modalSold.textContent = productData.sold + (productData.sold > 0 ? ' units' : '');
+            modalStock.textContent = productData.stock + ' available';
+            modalRating.textContent = productData.rating;
+            modalReviews.textContent = productData.reviews;
+            
+            productModal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        // Update sales bars
+        function updateSalesBars(dailySales) {
+            const salesBars = document.querySelectorAll('.sales-bar');
+            const maxValue = Math.max(...dailySales, 4000);
+            
+            salesBars.forEach((bar, index) => {
+                const value = dailySales[index] || 0;
                 const percentage = (value / maxValue) * 100;
                 const fill = bar.querySelector('.sales-bar-fill');
                 const valueDisplay = bar.querySelector('.sales-bar-value');
                 
-                setTimeout(() => {
-                    fill.style.height = `${percentage}%`;
-                    valueDisplay.textContent = value > 0 ? `Ksh ${value}` : '';
-                }, 200);
+                bar.setAttribute('data-value', value);
+                fill.style.height = `${percentage}%`;
+                valueDisplay.textContent = value > 0 ? `Ksh ${formatNumber(value)}` : '';
             });
         }
-        
-        // Initialize sales bars animation
-        animateSalesBars();
-    });
-</script>
+
+        // Format numbers with commas
+        function formatNumber(num) {
+            return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        }
+
+        // Admin functions
+        function loadCurrentData() {
+            database.ref('dashboard').once('value').then((snapshot) => {
+                const data = snapshot.val();
+                if (data) {
+                    // Load metrics
+                    document.getElementById('adminWeeklySales').value = data.metrics.weeklySales;
+                    document.getElementById('adminGrowth').value = data.metrics.growth;
+                    document.getElementById('adminProductsSold').value = data.metrics.productsSold;
+                    document.getElementById('adminDaysRemaining').value = data.metrics.daysRemaining;
+                    
+                    // Load stats
+                    document.getElementById('adminFranchises').value = data.stats.franchises;
+                    document.getElementById('adminStaff').value = data.stats.staff;
+                    document.getElementById('adminDeliveries').value = data.stats.deliveries;
+                    
+                    // Load target
+                    document.getElementById('adminWeeklyTarget').value = data.target.weeklyTarget;
+                    document.getElementById('adminDailySales').value = data.target.dailySales.join(',');
+                    
+                    // Load products into admin panels
+                    renderProductAdminForms(data.bestSellingProducts, 'bestSellingProductsAdmin');
+                    renderProductAdminForms(data.newArrivals, 'newArrivalsAdmin');
+                }
+            });
+        }
+
+        function renderProductAdminForms(products, containerId) {
+            const container = document.getElementById(containerId);
+            let html = '';
+            
+            products.forEach((product, index) => {
+                html += `
+                    <div class="admin-section" style="background: rgba(255,255,255,0.02); margin-bottom: 10px;">
+                        <h5 style="color: var(--soft-teal); margin-bottom: 10px;">Product ${index + 1}</h5>
+                        <div class="admin-grid">
+                            <div class="admin-input-group">
+                                <label>Name</label>
+                                <input type="text" value="${product.name}" onchange="updateProductField('${containerId}', ${index}, 'name', this.value)">
+                            </div>
+                            <div class="admin-input-group">
+                                <label>Category</label>
+                                <input type="text" value="${product.category}" onchange="updateProductField('${containerId}', ${index}, 'category', this.value)">
+                            </div>
+                            <div class="admin-input-group">
+                                <label>Price</label>
+                                <input type="number" value="${product.price}" onchange="updateProductField('${containerId}', ${index}, 'price', this.value)">
+                            </div>
+                            <div class="admin-input-group">
+                                <label>Image URL</label>
+                                <input type="text" value="${product.image}" onchange="updateProductField('${containerId}', ${index}, 'image', this.value)">
+                            </div>
+                            <div class="admin-input-group">
+                                <label>Sold</label>
+                                <input type="number" value="${product.sold}" onchange="updateProductField('${containerId}', ${index}, 'sold', this.value)">
+                            </div>
+                            <div class="admin-input-group">
+                                <label>Stock</label>
+                                <input type="number" value="${product.stock}" onchange="updateProductField('${containerId}', ${index}, 'stock', this.value)">
+                            </div>
+                            <div class="admin-input-group">
+                                <label>Rating</label>
+                                <input type="text" value="${product.rating}" onchange="updateProductField('${containerId}', ${index}, 'rating', this.value)">
+                            </div>
+                            <div class="admin-input-group">
+                                <label>Reviews</label>
+                                <input type="number" value="${product.reviews}" onchange="updateProductField('${containerId}', ${index}, 'reviews', this.value)">
+                            </div>
+                        </div>
+                        <div class="admin-input-group">
+                            <label>Description</label>
+                            <textarea onchange="updateProductField('${containerId}', ${index}, 'description', this.value)">${product.description}</textarea>
+                        </div>
+                        <button class="admin-btn secondary" onclick="removeProduct('${containerId}', ${index})" style="background: #ff4757;">Remove</button>
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = html;
+        }
+
+        function updateProductField(section, index, field, value) {
+            database.ref('dashboard').once('value').then((snapshot) => {
+                const data = snapshot.val();
+                const sectionKey = section === 'bestSellingProductsAdmin' ? 'bestSellingProducts' : 'newArrivals';
+                
+                if (data && data[sectionKey] && data[sectionKey][index]) {
+                    data[sectionKey][index][field] = value;
+                    // Recalculate total if sold or price changed
+                    if (field === 'sold' || field === 'price') {
+                        data[sectionKey][index].total = (parseInt(data[sectionKey][index].sold) * parseInt(data[sectionKey][index].price)).toString();
+                    }
+                    database.ref('dashboard').set(data);
+                }
+            });
+        }
+
+        function addProduct(section) {
+            database.ref('dashboard').once('value').then((snapshot) => {
+                const data = snapshot.val();
+                const sectionKey = section === 'bestSelling' ? 'bestSellingProducts' : 'newArrivals';
+                
+                const newProduct = {
+                    id: data[sectionKey].length + 1,
+                    name: "New Product",
+                    category: "Category",
+                    price: "0",
+                    image: "https://images.unsplash.com/photo-1560769684-5507c64e2f7f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80",
+                    sold: "0",
+                    total: "0",
+                    description: "Product description here",
+                    stock: "0",
+                    rating: "0",
+                    reviews: "0"
+                };
+                
+                data[sectionKey].push(newProduct);
+                database.ref('dashboard').set(data);
+            });
+        }
+
+        function removeProduct(section, index) {
+            database.ref('dashboard').once('value').then((snapshot) => {
+                const data = snapshot.val();
+                const sectionKey = section === 'bestSellingProductsAdmin' ? 'bestSellingProducts' : 'newArrivals';
+                
+                if (data && data[sectionKey] && data[sectionKey][index]) {
+                    data[sectionKey].splice(index, 1);
+                    database.ref('dashboard').set(data);
+                }
+            });
+        }
+
+        function updateAllData() {
+            const weeklySales = parseInt(document.getElementById('adminWeeklySales').value) || 14285;
+            const growth = parseInt(document.getElementById('adminGrowth').value) || 12;
+            const productsSold = parseInt(document.getElementById('adminProductsSold').value) || 117;
+            const daysRemaining = parseInt(document.getElementById('adminDaysRemaining').value) || 4;
+            const franchises = parseInt(document.getElementById('adminFranchises').value) || 8;
+            const staff = parseInt(document.getElementById('adminStaff').value) || 24;
+            const deliveries = parseInt(document.getElementById('adminDeliveries').value) || 3;
+            const weeklyTarget = parseInt(document.getElementById('adminWeeklyTarget').value) || 22000;
+            const dailySalesInput = document.getElementById('adminDailySales').value || "2100,3200,2800,3900,2285,0,0";
+            const dailySales = dailySalesInput.split(',').map(num => parseInt(num) || 0);
+            
+            database.ref('dashboard').once('value').then((snapshot) => {
+                const currentData = snapshot.val();
+                
+                const updatedData = {
+                    ...currentData,
+                    metrics: {
+                        weeklySales: weeklySales,
+                        growth: growth,
+                        daysRemaining: daysRemaining,
+                        productsSold: productsSold
+                    },
+                    stats: {
+                        franchises: franchises,
+                        staff: staff,
+                        deliveries: deliveries
+                    },
+                    target: {
+                        weeklyTarget: weeklyTarget,
+                        dailySales: dailySales
+                    }
+                };
+                
+                database.ref('dashboard').set(updatedData)
+                    .then(() => {
+                        alert('✅ All data updated successfully!');
+                    })
+                    .catch((error) => {
+                        alert('❌ Error updating data: ' + error.message);
+                    });
+            });
+        }
+
+        function resetToDefault() {
+            if (confirm('Are you sure you want to reset all data to default values?')) {
+                database.ref('dashboard').set(defaultData)
+                    .then(() => {
+                        alert('✅ Data reset to default values!');
+                    })
+                    .catch((error) => {
+                        alert('❌ Error resetting data: ' + error.message);
+                    });
+            }
+        }
+
+        // Close modal functionality
+        document.getElementById('modalClose').addEventListener('click', function() {
+            document.getElementById('productModal').classList.remove('active');
+            document.body.style.overflow = 'auto';
+        });
+
+        document.getElementById('productModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                this.classList.remove('active');
+                document.body.style.overflow = 'auto';
+            }
+        });
+    </script>
 </body>
 </html>
