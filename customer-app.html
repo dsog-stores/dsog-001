@@ -5,7 +5,32 @@
     <meta name="viewport" content="width=device-width, initial-scale=0.8, maximum-scale=1.0, user-scalable=no">
     <title>DSOG STORES | Luxury Home, Clothing & Art</title>
     <link rel="icon" type="image/x-icon" href="data:image/x-icon;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=">
+    <!-- Add this to your head section, before your main script -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
     
+    <script>
+      // Your Firebase configuration - REPLACE WITH YOUR ACTUAL VALUES
+      const firebaseConfig = {
+        apiKey: "AIzaSyAsSKsZsfIN2MxQ63ITxqhs_TBm8mE4uW4",
+        authDomain: "dsog--stores.firebaseapp.com",
+        projectId: "dsog--stores",
+        storageBucket: "dsog--stores.firebasestorage.app",
+        messagingSenderId: "249987969394",
+        appId: "1:249987969394:web:764aa4dafc3a0bae5a6deb",
+        measurementId: "G-NK3SYQPRF3"
+      };
+    
+      // Initialize Firebase
+      firebase.initializeApp(firebaseConfig);
+      
+      // Initialize services
+      const db = firebase.firestore();
+      const auth = firebase.auth();
+      
+      console.log('Firebase initialized successfully');
+    </script>
     <!-- PWA Meta Tags -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -3230,6 +3255,9 @@
         document.addEventListener('DOMContentLoaded', function() {
             // Initialize franchise system first
             initializeFranchiseSystem();
+
+            // Initialize Firebase
+            initFirebase();
             
             // Initialize wishlist UI
             updateWishlistUI();
@@ -4128,8 +4156,141 @@
                 showNotification(`${product.name} added to cart!`);
             }
 
+            // ==================== FIREBASE INTEGRATION ====================
+
+            // Firebase initialization function
+            function initFirebase() {
+                console.log('Firebase initialized for DSOG STORES');
+                testFirebaseConnection();
+            }
+            
+            // Test Firebase connection
+            async function testFirebaseConnection() {
+                try {
+                    await db.collection('connectionTests').doc('dsog-stores').set({
+                        timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+                        status: 'connected',
+                        store: 'DSOG STORES',
+                        franchise: currentFranchisee ? currentFranchisee.name : 'unknown'
+                    });
+                    console.log('✅ Firebase connection successful');
+                    return true;
+                } catch (error) {
+                    console.log('❌ Firebase connection failed:', error.message);
+                    return false;
+                }
+            }
+            
+            // Enhanced product loading with Firebase cache
+            async function loadProductsWithCache() {
+                console.log('🔄 Loading products with Firebase cache...');
+                
+                try {
+                    // FIRST: Try Google Sheets (your current system)
+                    const response = await fetch(`${scriptUrl}?action=getProducts`);
+                    
+                    if (!response.ok) throw new Error('Sheets response not ok');
+                    
+                    const result = await response.json();
+                    
+                    if (result.success) {
+                        const products = result.data;
+                        console.log(`✅ Loaded ${products.length} products from Google Sheets`);
+                        displayProducts(products);
+                        
+                        // SECONDARY: Cache products to Firebase for real-time features
+                        cacheProductsToFirebase(products);
+                        
+                        return products;
+                    } else {
+                        throw new Error(result.message);
+                    }
+                    
+                } catch (error) {
+                    console.error('❌ Google Sheets load failed:', error);
+                    
+                    // FALLBACK: Try Firebase cache
+                    try {
+                        console.log('🔄 Trying Firebase cache...');
+                        const cachedProducts = await loadProductsFromFirebaseCache();
+                        if (cachedProducts.length > 0) {
+                            console.log(`✅ Loaded ${cachedProducts.length} products from Firebase cache`);
+                            displayProducts(cachedProducts);
+                            showNotification('Products loaded from cache');
+                            return cachedProducts;
+                        } else {
+                            throw new Error('No cached products found');
+                        }
+                    } catch (firebaseError) {
+                        console.error('❌ Firebase cache also failed:', firebaseError);
+                    }
+                    
+                    // FINAL FALLBACK: Use sample products
+                    console.log('🔄 Using sample products as final fallback');
+                    loadSampleProducts();
+                }
+            }
+            
+            // Cache products to Firebase (non-blocking)
+            async function cacheProductsToFirebase(products) {
+                try {
+                    console.log('💾 Caching products to Firebase...');
+                    const batch = db.batch();
+                    
+                    products.forEach(product => {
+                        const productRef = db.collection('productsCache').doc(product.id);
+                        batch.set(productRef, {
+                            ...product,
+                            lastSynced: firebase.firestore.FieldValue.serverTimestamp(),
+                            source: 'google_sheets',
+                            isActive: true,
+                            franchise: currentFranchisee ? currentFranchisee.name : 'unknown'
+                        }, { merge: true });
+                    });
+                    
+                    await batch.commit();
+                    console.log(`✅ Successfully cached ${products.length} products to Firebase`);
+                } catch (error) {
+                    console.log('⚠️ Firebase cache failed (non-critical):', error);
+                }
+            }
+            
+            // Load from Firebase cache
+            async function loadProductsFromFirebaseCache() {
+                try {
+                    const snapshot = await db.collection('productsCache')
+                        .where('isActive', '==', true)
+                        .limit(50)
+                        .get();
+                    
+                    const products = snapshot.docs.map(doc => {
+                        const data = doc.data();
+                        return {
+                            id: data.id,
+                            name: data.name,
+                            category: data.category,
+                            basePrice: data.basePrice,
+                            quantity: data.quantity,
+                            description: data.description,
+                            image: data.image,
+                            availableColors: data.availableColors,
+                            availableMaterials: data.availableMaterials,
+                            availableSizes: data.availableSizes,
+                            collection: data.collection
+                        };
+                    });
+                    
+                    return products;
+                } catch (error) {
+                    console.error('❌ Error loading from Firebase cache:', error);
+                    throw error;
+                }
+            }
+
+// ==================== END FIREBASE INTEGRATION ====================
+
             // Load products on page load
-            loadProducts();
+            loadProductsWithCache();
 
             // Notification system
             function showNotification(message) {
@@ -4167,6 +4328,111 @@
                         }
                     }, 300);
                 }, 3000);
+            }
+            // Enhanced product loading with Firebase cache
+            async function loadProductsWithCache() {
+                console.log('Loading products with Firebase cache...');
+                
+                try {
+                    // FIRST: Try Google Sheets (your current system)
+                    const response = await fetch(`${scriptUrl}?action=getProducts`);
+                    
+                    if (!response.ok) throw new Error('Sheets response not ok');
+                    
+                    const result = await response.json();
+                    
+                    if (result.success) {
+                        const products = result.data;
+                        console.log(`Loaded ${products.length} products from Google Sheets`);
+                        displayProducts(products);
+                        
+                        // SECONDARY: Cache products to Firebase for real-time features
+                        cacheProductsToFirebase(products);
+                        
+                        return products;
+                    } else {
+                        throw new Error(result.message);
+                    }
+                    
+                } catch (error) {
+                    console.error('Google Sheets load failed:', error);
+                    
+                    // FALLBACK: Try Firebase cache
+                    try {
+                        console.log('Trying Firebase cache...');
+                        const cachedProducts = await loadProductsFromFirebaseCache();
+                        if (cachedProducts.length > 0) {
+                            console.log(`Loaded ${cachedProducts.length} products from Firebase cache`);
+                            displayProducts(cachedProducts);
+                            showNotification('Products loaded from cache');
+                            return cachedProducts;
+                        } else {
+                            throw new Error('No cached products found');
+                        }
+                    } catch (firebaseError) {
+                        console.error('Firebase cache also failed:', firebaseError);
+                    }
+                    
+                    // FINAL FALLBACK: Use sample products
+                    console.log('Using sample products as final fallback');
+                    loadSampleProducts();
+                }
+            }
+            
+            // Cache products to Firebase (non-blocking)
+            async function cacheProductsToFirebase(products) {
+                try {
+                    console.log('Caching products to Firebase...');
+                    const batch = db.batch();
+                    
+                    products.forEach(product => {
+                        const productRef = db.collection('productsCache').doc(product.id);
+                        batch.set(productRef, {
+                            ...product,
+                            lastSynced: firebase.firestore.FieldValue.serverTimestamp(),
+                            source: 'google_sheets',
+                            isActive: true
+                        }, { merge: true });
+                    });
+                    
+                    await batch.commit();
+                    console.log(`Successfully cached ${products.length} products to Firebase`);
+                } catch (error) {
+                    console.log('Firebase cache failed (non-critical):', error);
+                }
+            }
+            
+            // Load from Firebase cache
+            async function loadProductsFromFirebaseCache() {
+                try {
+                    const snapshot = await db.collection('productsCache')
+                        .where('isActive', '==', true)
+                        .limit(50)
+                        .get();
+                    
+                    const products = snapshot.docs.map(doc => {
+                        const data = doc.data();
+                        // Ensure all required fields are present
+                        return {
+                            id: data.id,
+                            name: data.name,
+                            category: data.category,
+                            basePrice: data.basePrice,
+                            quantity: data.quantity,
+                            description: data.description,
+                            image: data.image,
+                            availableColors: data.availableColors,
+                            availableMaterials: data.availableMaterials,
+                            availableSizes: data.availableSizes,
+                            collection: data.collection
+                        };
+                    });
+                    
+                    return products;
+                } catch (error) {
+                    console.error('Error loading from Firebase cache:', error);
+                    throw error;
+                }
             }
         });
     </script>
