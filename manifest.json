@@ -2,7 +2,7 @@
   "name": "DSOG STORES",
   "short_name": "DSOG",
   "description": "Luxury Fashion & Accessories",
-  "start_url": "/",
+  "start_url": "customer-app.html",
   "display": "standalone",
   "background_color": "#000000",
   "theme_color": "#FFD700",
