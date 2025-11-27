@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=0.8, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DSOG STORES | Luxury Fashion & Accessories</title>
     
     <!-- Simple Styles -->
@@ -60,6 +60,8 @@
             background: none;
             border: none;
             padding: 5px;
+            position: relative;
+            z-index: 1001;
         }
         
         .hamburger span {
@@ -69,6 +71,19 @@
             margin: 3px 0;
             transition: 0.3s;
             border-radius: 2px;
+        }
+        
+        /* Hamburger animation when active */
+        .hamburger.active span:nth-child(1) {
+            transform: rotate(-45deg) translate(-5px, 6px);
+        }
+        
+        .hamburger.active span:nth-child(2) {
+            opacity: 0;
+        }
+        
+        .hamburger.active span:nth-child(3) {
+            transform: rotate(45deg) translate(-5px, -6px);
         }
         
         .nav-links {
@@ -671,7 +686,7 @@
             }
             
             .zoom-hint {
-                display: none; /* Hide on very small screens */
+                display: none;
             }
         }
         
@@ -783,18 +798,31 @@
         </div>
     </footer>
 
-    <!-- Enhanced JavaScript with Image Zoom -->
+    <!-- Enhanced JavaScript with Improved Hamburger Menu -->
     <script>
         // Google Apps Script URL
         const scriptUrl = 'https://script.google.com/macros/s/AKfycbw8UI6-xwor3TlH9KESJHaj1Dxzo5MtfbjX-EWnApN0dEiEM66_CH1egA0dTp1E_zeNAA/exec';
         
         // WhatsApp number
-        const whatsappNumber = '254733737983';
+        const mainWhatsAppNumber = '254733737983';
+        
+        // Reseller database
+        const resellers = {
+            'john': 'John Mwangi',
+            'sarah': 'Sarah Atieno', 
+            'david': 'David Omondi',
+            'grace': 'Grace Wambui',
+            'mike': 'Mike Kamau',
+            'linda': 'Linda Chebet'
+        };
+
+        // Track current reseller
+        let currentReseller = null;
         
         // Hero slides data
         const heroSlides = [
             {
-                image: 'https://i.postimg.cc/pdGbYLY4/Black-and-Beige-Minimalist-Elegant-Cosmetics-Logo-1.webp',
+                image: 'https://i.postimg.cc/0QdrPbJv/20251125-1050-Christmas-Gift-Set-Design-remix-01kawzr8jnf88sd0qbnvc2y2gm.png',
                 title: 'New Arrivals'
             },
             {
@@ -811,42 +839,89 @@
         let currentProduct = null;
         let currentImageIndex = 0;
         
+        // Mobile menu state
+        let isMobileMenuOpen = false;
+
         // Initialize the page
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('🚀 DSOG STORES - Enhanced Version with Image Zoom');
+            console.log('🚀 DSOG STORES - Enhanced Version');
+            detectResellerFromURL();
             initMobileMenu();
             initHeroSlideshow();
             loadProducts();
             initModal();
         });
-        
-        // Mobile Menu Functionality
+
+        // Detect reseller from URL
+        function detectResellerFromURL() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const refCode = urlParams.get('ref');
+            
+            if (refCode && resellers[refCode]) {
+                currentReseller = resellers[refCode];
+                console.log(`🎯 Tracking sales for: ${currentReseller}`);
+                
+                // Save to localStorage for future visits
+                localStorage.setItem('dsog_reseller', JSON.stringify({
+                    code: refCode,
+                    name: currentReseller,
+                    timestamp: new Date().toISOString()
+                }));
+            } else {
+                // Check if reseller was previously set
+                const savedReseller = localStorage.getItem('dsog_reseller');
+                if (savedReseller) {
+                    const resellerData = JSON.parse(savedReseller);
+                    currentReseller = resellers[resellerData.code];
+                }
+            }
+        }
+
+        // Improved Mobile Menu Functionality
         function initMobileMenu() {
             const hamburgerBtn = document.getElementById('hamburgerBtn');
             const mobileMenu = document.getElementById('mobileMenu');
             const menuBackdrop = document.getElementById('menuBackdrop');
             const closeMenu = document.getElementById('closeMenu');
             
-            function openMobileMenu() {
-                mobileMenu.classList.add('active');
-                menuBackdrop.classList.add('active');
-                document.body.style.overflow = 'hidden';
+            function toggleMobileMenu() {
+                isMobileMenuOpen = !isMobileMenuOpen;
+                
+                if (isMobileMenuOpen) {
+                    // Open menu
+                    mobileMenu.classList.add('active');
+                    menuBackdrop.classList.add('active');
+                    hamburgerBtn.classList.add('active');
+                    document.body.style.overflow = 'hidden';
+                } else {
+                    // Close menu
+                    mobileMenu.classList.remove('active');
+                    menuBackdrop.classList.remove('active');
+                    hamburgerBtn.classList.remove('active');
+                    document.body.style.overflow = 'auto';
+                }
             }
             
-            function closeMobileMenu() {
-                mobileMenu.classList.remove('active');
-                menuBackdrop.classList.remove('active');
-                document.body.style.overflow = 'auto';
-            }
+            // Hamburger button click
+            hamburgerBtn.addEventListener('click', toggleMobileMenu);
             
-            hamburgerBtn.addEventListener('click', openMobileMenu);
-            closeMenu.addEventListener('click', closeMobileMenu);
-            menuBackdrop.addEventListener('click', closeMobileMenu);
+            // Close button click
+            closeMenu.addEventListener('click', toggleMobileMenu);
+            
+            // Backdrop click
+            menuBackdrop.addEventListener('click', toggleMobileMenu);
             
             // Close menu when clicking on links
             const mobileLinks = document.querySelectorAll('.mobile-nav-links a');
             mobileLinks.forEach(link => {
-                link.addEventListener('click', closeMobileMenu);
+                link.addEventListener('click', toggleMobileMenu);
+            });
+            
+            // Close menu with Escape key
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && isMobileMenuOpen) {
+                    toggleMobileMenu();
+                }
             });
         }
         
@@ -854,11 +929,15 @@
         window.closeMobileMenu = function() {
             const mobileMenu = document.getElementById('mobileMenu');
             const menuBackdrop = document.getElementById('menuBackdrop');
+            const hamburgerBtn = document.getElementById('hamburgerBtn');
+            
             mobileMenu.classList.remove('active');
             menuBackdrop.classList.remove('active');
+            hamburgerBtn.classList.remove('active');
             document.body.style.overflow = 'auto';
+            isMobileMenuOpen = false;
         };
-        
+
         // Simple Hero Slideshow
         function initHeroSlideshow() {
             const slidesContainer = document.getElementById('heroSlides');
@@ -1160,19 +1239,22 @@
             displayProducts(sampleProducts);
         }
         
-        // WhatsApp ordering function
+        // WhatsApp ordering function with reseller tracking
         function orderViaWhatsApp(productName, price) {
-            const message = `Hello DSOG STORES! I would like to order:\n\n` +
-                           `Product: ${productName}\n` +
-                           `Price: KSh ${price}\n\n` +
-                           `Please guide me through the ordering process.`;
+            let message = `Hello DSOG STORES! I would like to order:\n\n` +
+                         `Product: ${productName}\n` +
+                         `Price: KSh ${price}\n\n` +
+                         `Please guide me through the ordering process.`;
+            
+            // Add reseller name at the bottom (you'll see this in your WhatsApp)
+            if (currentReseller) {
+                message += `\n\n---\nReferred by: ${currentReseller}`;
+            }
             
             const encodedMessage = encodeURIComponent(message);
-            const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodedMessage}`;
+            const whatsappUrl = `https://wa.me/${mainWhatsAppNumber}?text=${encodedMessage}`;
             
             window.open(whatsappUrl, '_blank');
-            
-            // Simple notification
             showNotification(`Opening WhatsApp to order ${productName}`);
         }
         
