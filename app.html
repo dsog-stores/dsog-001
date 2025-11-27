@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=0.8, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DSOG STORES | Luxury Fashion & Accessories</title>
     
     <!-- Simple Styles -->
@@ -348,7 +348,7 @@
         .modal-content {
             background: var(--white);
             border-radius: 15px;
-            max-width: 900px;
+            max-width: 1000px;
             width: 100%;
             max-height: 90vh;
             overflow-y: auto;
@@ -396,11 +396,80 @@
             padding: 2rem;
         }
         
-        .modal-image {
+        /* Enhanced Image Section with Zoom */
+        .modal-image-section {
+            position: relative;
+        }
+        
+        .modal-image-container {
             width: 100%;
             height: 400px;
-            object-fit: cover;
             border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+            cursor: zoom-in;
+            background: var(--light-gray);
+        }
+        
+        .modal-image {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            transition: transform 0.3s ease;
+        }
+        
+        .modal-image.zoomed {
+            cursor: zoom-out;
+            transform: scale(1.5);
+        }
+        
+        .zoom-hint {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background: rgba(0,0,0,0.7);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .modal-image-container:hover .zoom-hint {
+            opacity: 1;
+        }
+        
+        .image-gallery {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+            overflow-x: auto;
+            padding: 0.5rem 0;
+        }
+        
+        .gallery-thumbnail {
+            width: 60px;
+            height: 60px;
+            border-radius: 8px;
+            overflow: hidden;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: border-color 0.3s ease;
+            flex-shrink: 0;
+        }
+        
+        .gallery-thumbnail.active {
+            border-color: var(--black);
+        }
+        
+        .gallery-thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
         
         .modal-details {
@@ -560,12 +629,17 @@
                 padding: 1.5rem;
             }
             
-            .modal-image {
+            .modal-image-container {
                 height: 300px;
             }
             
             .modal-title {
                 font-size: 1.4rem;
+            }
+            
+            .gallery-thumbnail {
+                width: 50px;
+                height: 50px;
             }
             
             .footer-links {
@@ -592,8 +666,12 @@
                 padding: 1rem;
             }
             
-            .modal-image {
+            .modal-image-container {
                 height: 250px;
+            }
+            
+            .zoom-hint {
+                display: none; /* Hide on very small screens */
             }
         }
         
@@ -705,7 +783,7 @@
         </div>
     </footer>
 
-    <!-- Simple JavaScript -->
+    <!-- Enhanced JavaScript with Image Zoom -->
     <script>
         // Google Apps Script URL
         const scriptUrl = 'https://script.google.com/macros/s/AKfycbw8UI6-xwor3TlH9KESJHaj1Dxzo5MtfbjX-EWnApN0dEiEM66_CH1egA0dTp1E_zeNAA/exec';
@@ -731,10 +809,11 @@
         
         // Current product for modal
         let currentProduct = null;
+        let currentImageIndex = 0;
         
         // Initialize the page
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('🚀 DSOG STORES - Responsive Version');
+            console.log('🚀 DSOG STORES - Enhanced Version with Image Zoom');
             initMobileMenu();
             initHeroSlideshow();
             loadProducts();
@@ -822,7 +901,7 @@
             });
         }
         
-        // Product Modal Functionality
+        // Product Modal Functionality with Image Zoom
         function initModal() {
             const modal = document.getElementById('productModal');
             const modalClose = document.getElementById('modalClose');
@@ -845,11 +924,32 @@
         
         function openModal(product) {
             currentProduct = product;
+            currentImageIndex = 0;
             const modal = document.getElementById('productModal');
             const modalBody = document.getElementById('modalBody');
             
+            // Get product images (use array if available, otherwise single image)
+            const productImages = product.images || [product.image];
+            
             modalBody.innerHTML = `
-                <img src="${product.image}" alt="${product.name}" class="modal-image">
+                <div class="modal-image-section">
+                    <div class="modal-image-container" id="modalImageContainer">
+                        <img src="${productImages[0]}" alt="${product.name}" class="modal-image" id="modalMainImage">
+                        <div class="zoom-hint">
+                            <i class="fas fa-search-plus"></i>
+                            Click to zoom
+                        </div>
+                    </div>
+                    ${productImages.length > 1 ? `
+                        <div class="image-gallery" id="imageGallery">
+                            ${productImages.map((img, index) => `
+                                <div class="gallery-thumbnail ${index === 0 ? 'active' : ''}" data-index="${index}">
+                                    <img src="${img}" alt="${product.name} - View ${index + 1}">
+                                </div>
+                            `).join('')}
+                        </div>
+                    ` : ''}
+                </div>
                 <div class="modal-details">
                     <h2 class="modal-title">${product.name}</h2>
                     <div class="modal-price">KSh ${product.basePrice}</div>
@@ -861,8 +961,95 @@
                 </div>
             `;
             
+            // Initialize image zoom and gallery
+            initImageZoom();
+            if (productImages.length > 1) {
+                initImageGallery(productImages);
+            }
+            
             modal.classList.add('active');
             document.body.style.overflow = 'hidden';
+        }
+        
+        function initImageZoom() {
+            const imageContainer = document.getElementById('modalImageContainer');
+            const mainImage = document.getElementById('modalMainImage');
+            
+            if (imageContainer && mainImage) {
+                imageContainer.addEventListener('click', function() {
+                    mainImage.classList.toggle('zoomed');
+                    
+                    // Update cursor and hint text
+                    if (mainImage.classList.contains('zoomed')) {
+                        this.style.cursor = 'zoom-out';
+                        const hint = this.querySelector('.zoom-hint');
+                        if (hint) {
+                            hint.innerHTML = '<i class="fas fa-search-minus"></i> Click to zoom out';
+                        }
+                    } else {
+                        this.style.cursor = 'zoom-in';
+                        const hint = this.querySelector('.zoom-hint');
+                        if (hint) {
+                            hint.innerHTML = '<i class="fas fa-search-plus"></i> Click to zoom';
+                        }
+                    }
+                });
+                
+                // Reset zoom when clicking outside the image
+                document.addEventListener('click', function(e) {
+                    if (!imageContainer.contains(e.target) && mainImage.classList.contains('zoomed')) {
+                        mainImage.classList.remove('zoomed');
+                        imageContainer.style.cursor = 'zoom-in';
+                        const hint = imageContainer.querySelector('.zoom-hint');
+                        if (hint) {
+                            hint.innerHTML = '<i class="fas fa-search-plus"></i> Click to zoom';
+                        }
+                    }
+                });
+            }
+        }
+        
+        function initImageGallery(images) {
+            const thumbnails = document.querySelectorAll('.gallery-thumbnail');
+            const mainImage = document.getElementById('modalMainImage');
+            
+            thumbnails.forEach(thumb => {
+                thumb.addEventListener('click', function() {
+                    const index = parseInt(this.getAttribute('data-index'));
+                    currentImageIndex = index;
+                    
+                    // Update main image
+                    mainImage.src = images[index];
+                    mainImage.classList.remove('zoomed');
+                    
+                    // Update active thumbnail
+                    thumbnails.forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // Reset zoom container cursor
+                    const imageContainer = document.getElementById('modalImageContainer');
+                    if (imageContainer) {
+                        imageContainer.style.cursor = 'zoom-in';
+                        const hint = imageContainer.querySelector('.zoom-hint');
+                        if (hint) {
+                            hint.innerHTML = '<i class="fas fa-search-plus"></i> Click to zoom';
+                        }
+                    }
+                });
+            });
+            
+            // Add keyboard navigation for gallery
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'ArrowLeft' && currentImageIndex > 0) {
+                    // Previous image
+                    const prevThumb = document.querySelector(`.gallery-thumbnail[data-index="${currentImageIndex - 1}"]`);
+                    if (prevThumb) prevThumb.click();
+                } else if (e.key === 'ArrowRight' && currentImageIndex < images.length - 1) {
+                    // Next image
+                    const nextThumb = document.querySelector(`.gallery-thumbnail[data-index="${currentImageIndex + 1}"]`);
+                    if (nextThumb) nextThumb.click();
+                }
+            });
         }
         
         function closeModal() {
@@ -870,6 +1057,7 @@
             modal.classList.remove('active');
             document.body.style.overflow = 'auto';
             currentProduct = null;
+            currentImageIndex = 0;
         }
         
         // Load products from Google Sheets
@@ -940,7 +1128,7 @@
             return card;
         }
         
-        // Fallback sample products
+        // Fallback sample products with multiple images
         function loadSampleProducts() {
             const sampleProducts = [
                 {
@@ -949,6 +1137,10 @@
                     category: 'clothing',
                     basePrice: 8999,
                     image: 'https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80',
+                    images: [
+                        'https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80',
+                        'https://images.unsplash.com/photo-1576566588028-4147f3842f27?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80'
+                    ],
                     description: 'Premium cashmere sweater with elegant ribbed detailing. Made from 100% pure cashmere for ultimate comfort and luxury.'
                 },
                 {
@@ -957,23 +1149,11 @@
                     category: 'clothing',
                     basePrice: 14550,
                     image: 'https://images.unsplash.com/photo-1595777457583-95e059d581b8?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80',
+                    images: [
+                        'https://images.unsplash.com/photo-1595777457583-95e059d581b8?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80',
+                        'https://images.unsplash.com/photo-1539008835657-9e8e9680c956?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80'
+                    ],
                     description: 'Elegant silk dress perfect for special occasions. Features intricate embroidery and a flowing silhouette.'
-                },
-                {
-                    id: '3',
-                    name: 'Abstract Canvas Art',
-                    category: 'art',
-                    basePrice: 24575,
-                    image: 'https://images.unsplash.com/photo-1541961017774-22349e4a1262?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80',
-                    description: 'Large abstract painting on premium canvas. A statement piece that adds sophistication to any space.'
-                },
-                {
-                    id: '4',
-                    name: 'Leather Handbag',
-                    category: 'accessories',
-                    basePrice: 12500,
-                    image: 'https://images.unsplash.com/photo-1584917865442-de89df76afd3?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80',
-                    description: 'Genuine leather handbag with multiple compartments. Perfect for both casual and formal occasions.'
                 }
             ];
             
