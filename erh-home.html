@@ -1,1 +1,881 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ERH System | DSOG STORES</title>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700&family=EB+Garamond:wght@500;600;700&display=swap" rel="stylesheet">
+  <link href='https://fonts.googleapis.com/css?family=Poppins' rel='stylesheet'>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    :root {
+      --primary-dark: #0a192f;
+      --primary-light: #1A2433;
+      --accent-gold: #D4AF37;
+      --accent-blue: #5B8FB9;
+      --text-light: #F0F4F8;
+      --text-gray: #B8C2CC;
+      --text-dark: #7E8A98;
+    }
 
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Manrope', sans-serif;
+      background-color: var(--primary-dark);
+      color: var(--text-light);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* Navigation */
+    .navigation {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background: rgba(10, 25, 47, 0.95);
+      backdrop-filter: blur(10px);
+      z-index: 1000;
+      padding: 1rem 2rem;
+      border-bottom: 1px solid rgba(212, 175, 55, 0.1);
+    }
+
+    .nav-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .nav-logo-icon {
+      width: 40px;
+      height: 40px;
+      background: rgba(212, 175, 55, 0.1);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--accent-gold);
+      font-size: 1rem;
+      border: 1px solid rgba(212, 175, 55, 0.2);
+    }
+
+    .nav-logo-text {
+      font-family: 'Poppins', serif;
+      font-size: 1.5rem;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      align-items: center;
+    }
+
+    .nav-link {
+      color: var(--text-gray);
+      text-decoration: none;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+    }
+
+    .nav-link:hover {
+      color: var(--accent-gold);
+      background: rgba(212, 175, 55, 0.05);
+    }
+
+    .nav-link.active {
+      color: var(--accent-gold);
+      background: rgba(212, 175, 55, 0.1);
+    }
+
+    .nav-actions {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+    }
+
+    .btn {
+      padding: 0.6rem 1.5rem;
+      border-radius: 6px;
+      font-weight: 500;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      border: none;
+      cursor: pointer;
+      font-family: 'Manrope', sans-serif;
+    }
+
+    .btn-primary {
+      background: var(--accent-gold);
+      color: var(--primary-dark);
+    }
+
+    .btn-primary:hover {
+      background: #c19c2e;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
+    }
+
+    .btn-secondary {
+      background: rgba(91, 143, 185, 0.1);
+      color: var(--accent-blue);
+      border: 1px solid rgba(91, 143, 185, 0.3);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(91, 143, 185, 0.2);
+      transform: translateY(-2px);
+    }
+
+    /* Main Content */
+    .cover-container {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      padding: 8rem 6rem 4rem;
+      position: relative;
+      background: 
+        radial-gradient(circle at 20% 30%, rgba(212, 175, 55, 0.03) 0%, transparent 30%),
+        radial-gradient(circle at 80% 70%, rgba(91, 143, 185, 0.03) 0%, transparent 30%),
+        linear-gradient(var(--primary-dark), var(--primary-dark));
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6rem;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .logo-icon {
+      width: 48px;
+      height: 48px;
+      background: rgba(212, 175, 55, 0.1);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--accent-gold);
+      font-size: 1.2rem;
+      border: 1px solid rgba(212, 175, 55, 0.2);
+    }
+
+    .logo-text {
+      font-family: 'Poppins', serif;
+      font-size: 1.8rem;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+
+    .document-meta {
+      text-align: right;
+      font-size: 0.9rem;
+      color: var(--text-dark);
+    }
+
+    .document-meta span {
+      display: block;
+      margin-bottom: 0.3rem;
+    }
+
+    .main-content {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: center;
+      margin-bottom: 4rem;
+    }
+
+    .text-content {
+      max-width: 600px;
+    }
+
+    .company-name {
+      font-size: 2rem;
+      color: var(--accent-gold);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-bottom: 1.5rem;
+    }
+
+    h1 {
+      font-family: 'Poppins';
+      font-size: 3.5rem;
+      font-weight: 1000;
+      line-height: 1.2;
+      margin-bottom: 2rem;
+      letter-spacing: -0.5px;
+    }
+
+    .subtitle {
+      font-size: 1.3rem;
+      color: var(--text-gray);
+      margin-bottom: 3rem;
+      max-width: 500px;
+    }
+
+    .divider {
+      width: 80px;
+      height: 2px;
+      background: var(--accent-gold);
+      margin: 2.5rem 0;
+    }
+
+    .key-features {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 2rem;
+      margin-bottom: 3rem;
+    }
+
+    .feature {
+      display: flex;
+      gap: 1rem;
+    }
+
+    .feature-icon {
+      color: var(--accent-blue);
+      font-size: 1.2rem;
+      margin-top: 3px;
+    }
+
+    .feature-text {
+      font-size: 0.95rem;
+    }
+
+    .feature-text strong {
+      color: var(--text-light);
+      font-weight: 600;
+      display: block;
+      margin-bottom: 0.3rem;
+    }
+
+    .feature-text span {
+      color: var(--text-dark);
+      line-height: 1.6;
+    }
+
+    .action-buttons {
+      display: flex;
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+
+    .charts-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      width: 100%;
+      max-width: 500px;
+    }
+
+    .chart-wrapper {
+      position: relative;
+      background: rgba(26, 36, 51, 0.5);
+      border-radius: 8px;
+      padding: 1rem;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      border: 1px solid rgba(126, 138, 152, 0.1);
+      height: 220px;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .chart-wrapper:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    .chart-title {
+      font-size: 0.8rem;
+      color: var(--text-gray);
+      margin-bottom: 0.5rem;
+      text-align: center;
+    }
+
+    .chart-legend {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin-top: 0.5rem;
+      font-size: 0.7rem;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+
+    .legend-color {
+      width: 10px;
+      height: 10px;
+      border-radius: 2px;
+    }
+
+    .large-chart {
+      grid-column: span 2;
+      height: 240px;
+    }
+
+    .chart-container {
+      position: relative;
+      height: calc(100% - 30px);
+      width: 100%;
+    }
+
+    /* Quick Stats Section */
+    .quick-stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.5rem;
+      margin: 4rem 0;
+    }
+
+    .stat-card {
+      background: rgba(26, 36, 51, 0.5);
+      border-radius: 8px;
+      padding: 1.5rem;
+      text-align: center;
+      border: 1px solid rgba(126, 138, 152, 0.1);
+      transition: transform 0.3s ease;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .stat-value {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--accent-gold);
+      margin-bottom: 0.5rem;
+    }
+
+    .stat-label {
+      font-size: 0.9rem;
+      color: var(--text-gray);
+    }
+
+    .footer {
+      margin-top: auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.85rem;
+      color: var(--text-dark);
+      padding-top: 3rem;
+      border-top: 1px solid rgba(126, 138, 152, 0.2);
+    }
+
+    .version {
+      font-family: 'EB Garamond', serif;
+      font-weight: 500;
+    }
+
+    /* Responsive */
+    @media (max-width: 1200px) {
+      .cover-container {
+        padding: 8rem 4rem 4rem;
+      }
+      
+      h1 {
+        font-size: 3rem;
+      }
+    }
+
+    @media (max-width: 992px) {
+      .main-content {
+        grid-template-columns: 1fr;
+      }
+      
+      .text-content {
+        max-width: 100%;
+      }
+      
+      .charts-container {
+        max-width: 100%;
+        margin-top: 3rem;
+      }
+
+      .quick-stats {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .cover-container {
+        padding: 8rem 2rem 4rem;
+      }
+      
+      h1 {
+        font-size: 2.5rem;
+      }
+      
+      .subtitle {
+        font-size: 1.1rem;
+      }
+      
+      .key-features {
+        grid-template-columns: 1fr;
+      }
+      
+      .charts-container {
+        grid-template-columns: 1fr;
+      }
+      
+      .large-chart {
+        grid-column: span 1;
+      }
+      
+      .chart-wrapper, .large-chart {
+        height: 250px;
+      }
+
+      .quick-stats {
+        grid-template-columns: 1fr;
+      }
+
+      .navigation {
+        padding: 1rem;
+      }
+
+      .nav-links {
+        display: none;
+      }
+
+      .nav-actions {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation -->
+  <nav class="navigation">
+    <div class="nav-container">
+      <div class="nav-logo">
+        <div class="nav-logo-icon">
+          <i class="fas fa-boxes"></i>
+        </div>
+        <div class="nav-logo-text">DSOG STORES</div>
+      </div>
+      
+      <div class="nav-links">
+        <a href="#" class="nav-link active">Home</a>
+        <a href="erh-home.html" class="nav-link">Workspace</a>
+        <a href="analytics.html" class="nav-link">Analytics</a>
+      </div>
+      
+      <div class="nav-actions">
+        <a href="login.html" class="btn btn-secondary">Login</a>
+        <a href="workspace.html" class="btn btn-primary">Launch Workspace</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <div class="cover-container">
+    <div class="main-content">
+      <div class="text-content">
+        <div class="company-name">DSOG STORES</div>
+        <h1>Supply Chain Management System</h1>
+        <p class="subtitle">
+          Next-generation system unifying procurement, inventory management, production planning, and logistics operations with cross-system integration.
+        </p>
+        
+        <div class="divider"></div>
+        
+        <div class="key-features">
+          <div class="feature">
+            <div class="feature-icon">
+              <i class="fas fa-brain"></i>
+            </div>
+            <div class="feature-text">
+              <strong>Easy to Navigate through</strong>
+              <span>Integrates Google sheets to make work easier and collaboration effective</span>
+            </div>
+          </div>
+          
+          <div class="feature">
+            <div class="feature-icon">
+              <i class="fas fa-exchange-alt"></i>
+            </div>
+            <div class="feature-text">
+              <strong>Real-Time Integration</strong>
+              <span>Seamless connectivity with our full Enterprise System</span>
+            </div>
+          </div>
+          
+          <div class="feature">
+            <div class="feature-icon">
+              <i class="fas fa-sliders-h"></i>
+            </div>
+            <div class="feature-text">
+              <strong>Simple UI</strong>
+              <span>Minimal user interface that lets you focus more on efficiency</span>
+            </div>
+          </div>
+          
+          <div class="feature">
+            <div class="feature-icon">
+              <i class="fa fa-user"></i>
+            </div>
+            <div class="feature-text">
+              <strong>KazInni Integration</strong>
+              <span>Supports freelancing opportunities and short term projects</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="action-buttons">
+          <a href="workspace.html" class="btn btn-primary">
+            <i class="fas fa-rocket"></i> Launch Workspace
+          </a>
+          <a href="demo.html" class="btn btn-secondary">
+            <i class="fas fa-play-circle"></i> Watch Demo
+          </a>
+        </div>
+      </div>
+      
+      <div class="charts-container">
+        <div class="chart-wrapper">
+          <div class="chart-title">Inventory Levels</div>
+          <div class="chart-container">
+            <canvas id="inventoryChart"></canvas>
+          </div>
+          <div class="chart-legend">
+            <div class="legend-item">
+              <div class="legend-color" style="background: var(--accent-gold);"></div>
+              <span>Current</span>
+            </div>
+            <div class="legend-item">
+              <div class="legend-color" style="background: var(--accent-blue);"></div>
+              <span>Target</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="chart-wrapper">
+          <div class="chart-title">Order Status</div>
+          <div class="chart-container">
+            <canvas id="orderChart"></canvas>
+          </div>
+        </div>
+        
+        <div class="chart-wrapper large-chart">
+          <div class="chart-title">Supply Chain Performance</div>
+          <div class="chart-container">
+            <canvas id="performanceChart"></canvas>
+          </div>
+          <div class="chart-legend">
+            <div class="legend-item">
+              <div class="legend-color" style="background: #D4AF37;"></div>
+              <span>Last Month</span>
+            </div>
+            <div class="legend-item">
+              <div class="legend-color" style="background: #5B8FB9;"></div>
+              <span>This Month</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Stats Section -->
+    <div class="quick-stats">
+      <div class="stat-card">
+        <div class="stat-value" id="ordersValue">1,247</div>
+        <div class="stat-label">Active Orders</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="inventoryValue">89%</div>
+        <div class="stat-label">Inventory Accuracy</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="suppliersValue">42</div>
+        <div class="stat-label">Active Suppliers</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="performanceValue">94%</div>
+        <div class="stat-label">System Performance</div>
+      </div>
+    </div>
+    
+    <div class="footer">
+      <div>© 2025 DSOG STORES. All rights reserved.</div>
+      <div class="version">ERH v1.0</div>
+    </div>
+  </div>
+
+  <script>
+    // Helper function to initialize charts with proper sizing
+    function initializeChart(chartId, config) {
+      const ctx = document.getElementById(chartId).getContext('2d');
+      return new Chart(ctx, {
+        ...config,
+        options: {
+          ...config.options,
+          responsive: true,
+          maintainAspectRatio: false,
+          animation: {
+            duration: 1000,
+            easing: 'easeOutQuart'
+          }
+        }
+      });
+    }
+
+    // Inventory Chart (Bar Chart)
+    const inventoryChart = initializeChart('inventoryChart', {
+      type: 'bar',
+      data: {
+        labels: ['Electronics', 'Clothing', 'Home Goods', 'Groceries'],
+        datasets: [
+          {
+            label: 'Current',
+            data: [65, 59, 80, 81],
+            backgroundColor: 'rgba(212, 175, 55, 0.7)',
+            borderColor: 'rgba(212, 175, 55, 1)',
+            borderWidth: 1,
+            borderRadius: 4
+          },
+          {
+            label: 'Target',
+            data: [80, 80, 80, 80],
+            backgroundColor: 'rgba(91, 143, 185, 0.3)',
+            borderColor: 'rgba(91, 143, 185, 1)',
+            borderWidth: 1,
+            type: 'line',
+            pointRadius: 0,
+            borderDash: [5, 5]
+          }
+        ]
+      },
+      options: {
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            backgroundColor: 'rgba(26, 36, 51, 0.9)',
+            titleColor: 'var(--text-light)',
+            bodyColor: 'var(--text-gray)',
+            borderColor: 'rgba(126, 138, 152, 0.2)',
+            borderWidth: 1
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            grid: {
+              color: 'rgba(126, 138, 152, 0.1)',
+              drawBorder: false
+            },
+            ticks: {
+              color: 'rgba(126, 138, 152, 0.8)'
+            }
+          },
+          x: {
+            grid: {
+              display: false,
+              drawBorder: false
+            },
+            ticks: {
+              color: 'rgba(126, 138, 152, 0.8)'
+            }
+          }
+        }
+      }
+    });
+
+    // Order Chart (Doughnut)
+    const orderChart = initializeChart('orderChart', {
+      type: 'doughnut',
+      data: {
+        labels: ['Completed', 'Processing', 'Pending', 'Cancelled'],
+        datasets: [{
+          data: [45, 30, 15, 10],
+          backgroundColor: [
+            'rgba(212, 175, 55, 0.8)',
+            'rgba(91, 143, 185, 0.8)',
+            'rgba(126, 138, 152, 0.8)',
+            'rgba(240, 244, 248, 0.3)'
+          ],
+          borderColor: 'rgba(26, 36, 51, 0.5)',
+          borderWidth: 1
+        }]
+      },
+      options: {
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            backgroundColor: 'rgba(26, 36, 51, 0.9)',
+            titleColor: 'var(--text-light)',
+            bodyColor: 'var(--text-gray)',
+            borderColor: 'rgba(126, 138, 152, 0.2)',
+            borderWidth: 1
+          }
+        },
+        cutout: '65%'
+      }
+    });
+
+    // Performance Chart (Line Chart)
+    const performanceChart = initializeChart('performanceChart', {
+      type: 'line',
+      data: {
+        labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+        datasets: [
+          {
+            label: 'Last Month',
+            data: [65, 59, 80, 81],
+            borderColor: 'rgba(212, 175, 55, 1)',
+            backgroundColor: 'rgba(212, 175, 55, 0.1)',
+            borderWidth: 2,
+            tension: 0.3,
+            fill: true,
+            pointBackgroundColor: 'rgba(212, 175, 55, 1)',
+            pointRadius: 4,
+            pointHoverRadius: 6
+          },
+          {
+            label: 'This Month',
+            data: [70, 65, 85, 90],
+            borderColor: 'rgba(91, 143, 185, 1)',
+            backgroundColor: 'rgba(91, 143, 185, 0.1)',
+            borderWidth: 2,
+            tension: 0.3,
+            fill: true,
+            pointBackgroundColor: 'rgba(91, 143, 185, 1)',
+            pointRadius: 4,
+            pointHoverRadius: 6
+          }
+        ]
+      },
+      options: {
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            backgroundColor: 'rgba(26, 36, 51, 0.9)',
+            titleColor: 'var(--text-light)',
+            bodyColor: 'var(--text-gray)',
+            borderColor: 'rgba(126, 138, 152, 0.2)',
+            borderWidth: 1,
+            mode: 'index',
+            intersect: false
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: false,
+            grid: {
+              color: 'rgba(126, 138, 152, 0.1)',
+              drawBorder: false
+            },
+            ticks: {
+              color: 'rgba(126, 138, 152, 0.8)'
+            }
+          },
+          x: {
+            grid: {
+              display: false,
+              drawBorder: false
+            },
+            ticks: {
+              color: 'rgba(126, 138, 152, 0.8)'
+            }
+          }
+        },
+        interaction: {
+          mode: 'nearest',
+          axis: 'x',
+          intersect: false
+        }
+      }
+    });
+
+    // Animate stats counter
+    function animateCounter(elementId, targetValue, duration = 2000) {
+      const element = document.getElementById(elementId);
+      const startValue = 0;
+      const increment = targetValue / (duration / 16);
+      let currentValue = startValue;
+      
+      const timer = setInterval(() => {
+        currentValue += increment;
+        if (currentValue >= targetValue) {
+          clearInterval(timer);
+          currentValue = targetValue;
+        }
+        element.textContent = Math.floor(currentValue);
+      }, 16);
+    }
+
+    // Add smooth animation to charts and stats
+    function animateCharts() {
+      // Inventory chart animation
+      const inventoryData = [65, 59, 80, 81].map(v => Math.max(10, Math.min(100, v * (0.9 + Math.random() * 0.2))));
+      inventoryChart.data.datasets[0].data = inventoryData;
+      inventoryChart.update();
+      
+      // Order chart animation
+      orderChart.data.datasets[0].data = [
+        Math.max(5, Math.floor(45 * (0.9 + Math.random() * 0.2))),
+        Math.max(5, Math.floor(30 * (0.9 + Math.random() * 0.2))),
+        Math.max(5, Math.floor(15 * (0.9 + Math.random() * 0.2))),
+        Math.max(5, Math.floor(10 * (0.9 + Math.random() * 0.2)))
+      ];
+      orderChart.update();
+      
+      // Performance chart animation
+      performanceChart.data.datasets[1].data = [70, 65, 85, 90].map(v => Math.max(50, Math.min(100, v * (0.95 + Math.random() * 0.1))));
+      performanceChart.update();
+
+      // Animate stats
+      animateCounter('ordersValue', 1247);
+      animateCounter('inventoryValue', 89);
+      animateCounter('suppliersValue', 42);
+      animateCounter('performanceValue', 94);
+    }
+
+    // Initialize stats on page load
+    document.addEventListener('DOMContentLoaded', function() {
+      animateCounter('ordersValue', 1247);
+      animateCounter('inventoryValue', 89);
+      animateCounter('suppliersValue', 42);
+      animateCounter('performanceValue', 94);
+    });
+
+    // Update charts every 3 seconds
+    setInterval(animateCharts, 3000);
+
+    // Handle window resize properly
+    window.addEventListener('resize', function() {
+      inventoryChart.resize();
+      orderChart.resize();
+      performanceChart.resize();
+    });
+  </script>
+</body>
+</html>
