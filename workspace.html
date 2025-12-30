@@ -55,6 +55,93 @@
       100% { background-position: 0% 0%; }
     }
 
+    /* Authentication Loader */
+    .auth-loader {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: var(--dark-blue);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 10001;
+      text-align: center;
+      padding: 20px;
+    }
+    
+    .auth-loader-text {
+      color: var(--light-pink);
+      margin-top: 25px;
+      font-size: 1.2rem;
+      font-weight: 500;
+      letter-spacing: 0.5px;
+      animation: pulse 1.5s ease-in-out infinite;
+    }
+    
+    @keyframes pulse {
+      0%, 100% { opacity: 0.7; }
+      50% { opacity: 1; }
+    }
+
+    /* Sheet Loader */
+    .sheet-loader {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: var(--medium-blue);
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 999;
+      text-align: center;
+      padding: 20px;
+    }
+    
+    .sheet-loader-text {
+      color: var(--light-pink);
+      margin-top: 25px;
+      font-size: 1.1rem;
+      font-weight: 500;
+      letter-spacing: 0.5px;
+      animation: pulse 1.5s ease-in-out infinite;
+      max-width: 80%;
+      text-align: center;
+    }
+    
+    .sheet-loader small {
+      color: var(--text-secondary);
+      margin-top: 10px;
+      font-size: 0.9rem;
+      opacity: 0.8;
+    }
+
+    /* Loader animation */
+    .loader {
+      width: 45px;
+      aspect-ratio: 1;
+      --c: no-repeat linear-gradient(var(--light-pink) 0 0);
+      background: var(--c), var(--c), var(--c), var(--c), var(--c), var(--c);
+      animation: 
+        l14-1 .5s infinite alternate,
+        l14-2 2s infinite;
+    }
+    
+    @keyframes l14-1 {
+      0%,10% { background-size: 20% 100%; }
+      100% { background-size: 20% 20%; }
+    }
+    
+    @keyframes l14-2 {
+      0%,49.9% { background-position: 0 0, 0 100%, 50% 50%, 50% 50%, 100% 0, 100% 100%; }
+      50%,100% { background-position: 0 50%, 0 50%, 50% 0, 50% 100%, 100% 50%, 100% 50%; }
+    }
+
     /* Access Denied Message */
     .access-denied {
       position: fixed;
@@ -63,7 +150,7 @@
       width: 100%;
       height: 100%;
       background: rgba(10, 25, 47, 0.95);
-      display: flex;
+      display: none;
       flex-direction: column;
       justify-content: center;
       align-items: center;
@@ -107,7 +194,7 @@
 
     /* Layout structure */
     .app-container {
-      display: flex;
+      display: none;
       height: 100vh;
       min-height: 0;
       width: 100%;
@@ -256,7 +343,7 @@
       overflow: hidden;
     }
 
-    /* Header styles - UPDATED to include user info */
+    /* Header styles */
     header {
       background: var(--medium-blue);
       color: var(--text-primary);
@@ -441,6 +528,7 @@
       flex-direction: column;
       padding: 20px;
       overflow: auto;
+      position: relative;
     }
 
     .iframe-container {
@@ -452,6 +540,7 @@
       border-radius: 8px;
       overflow: hidden;
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      position: relative;
     }
 
     iframe {
@@ -460,6 +549,24 @@
       height: 100%;
       min-height: 500px;
       background-color: #fff;
+    }
+
+    /* Current Sheet Info */
+    .current-sheet-info {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      background: rgba(10, 25, 47, 0.9);
+      padding: 8px 15px;
+      border-radius: 6px;
+      color: var(--light-pink);
+      font-size: 0.9rem;
+      font-weight: 500;
+      z-index: 998;
+      display: none;
+      border: 1px solid rgba(255, 107, 139, 0.2);
+      backdrop-filter: blur(5px);
+      max-width: 80%;
     }
 
     /* Footer */
@@ -522,11 +629,11 @@
       }
       
       .user-email {
-        display: none; /* Hide email on smaller screens */
+        display: none;
       }
       
       .logout-btn span {
-        display: none; /* Hide "Logout" text, show only icon */
+        display: none;
       }
       
       .logout-btn {
@@ -534,6 +641,12 @@
         width: 32px;
         height: 32px;
         justify-content: center;
+      }
+      
+      .current-sheet-info {
+        font-size: 0.8rem;
+        padding: 6px 12px;
+        max-width: 70%;
       }
     }
 
@@ -636,6 +749,14 @@
       main {
         padding: 15px;
       }
+      
+      .current-sheet-info {
+        top: 5px;
+        left: 5px;
+        font-size: 0.75rem;
+        padding: 5px 10px;
+        max-width: 60%;
+      }
     }
 
     @media (max-width: 600px) {
@@ -653,6 +774,11 @@
       .datetime {
         width: 100%;
         align-items: flex-start;
+      }
+      
+      .sheet-loader-text {
+        font-size: 1rem;
+        max-width: 90%;
       }
     }
     
@@ -678,6 +804,16 @@
         padding: 4px 8px;
         font-size: 11px;
       }
+      
+      .current-sheet-info {
+        font-size: 0.7rem;
+        padding: 4px 8px;
+        max-width: 50%;
+      }
+      
+      .sheet-loader-text {
+        font-size: 0.9rem;
+      }
     }
   </style>
 </head>
@@ -685,15 +821,21 @@
   <div class="background"></div>
   <div class="background-pattern"></div>
 
+  <!-- Authentication Loader (Shows first) -->
+  <div class="auth-loader" id="authLoader">
+    <div class="loader"></div>
+    <div class="auth-loader-text">Verifying your access...</div>
+  </div>
+
   <!-- Access Denied Message (Shows when not logged in) -->
   <div class="access-denied" id="accessDenied">
     <h2>🔒 Access Restricted</h2>
-    <p>You need to be logged in to access the workspace. Please sign in through the main dashboard first.</p>
+    <p>You need to be logged in to access the DSOG STORES Workspace. Please sign in through the main dashboard first.</p>
     <a href="index.html" class="access-denied-btn">Go to Dashboard</a>
   </div>
 
   <!-- Workspace Content (Shows when logged in) -->
-  <div class="app-container" id="workspaceContainer" style="display: none;">
+  <div class="app-container" id="workspaceContainer">
     
     <!-- Side Navigation -->
     <nav class="sidenav">
@@ -837,8 +979,8 @@
     <div class="main-content">
       <header>
         <div class="store-info">
-          <h1 class="store-name">DSOG STORES - Fashion & Home</h1>
-          <div class="store-code">NBO-DSOG001 • Week 24 Sales</div>
+          <h1 class="store-name">DSOG STORES - Enterprise Sales Hub</h1>
+          <div class="store-code">NBO-DSOG001 • All Systems Operational</div>
         </div>
 
         <div class="header-actions">
@@ -871,16 +1013,25 @@
           </div>
           
           <div class="dashboard-nav">
-            <a href="index.html">Home</a>
-            <a href="#" class="active">Workspace</a>
-            <a href="marketplace.html">Marketplace</a>
+            <a href="index.html" id="homeButton">Home</a>
+            <a href="#" class="active" id="workspaceButton">Workspace</a>
           </div>
         </div>
       </header>
 
       <main>
         <div class="iframe-container">
-          <iframe id="iframe" loading="lazy" title="ESH Workspace Content"></iframe>
+          <!-- Sheet Loader -->
+          <div class="sheet-loader" id="sheetLoader">
+            <div class="loader"></div>
+            <div class="sheet-loader-text" id="sheetLoaderText">Loading sheet...</div>
+            <small>This may take a moment for larger sheets</small>
+          </div>
+          
+          <!-- Current Sheet Info -->
+          <div class="current-sheet-info" id="currentSheetInfo"></div>
+          
+          <iframe id="iframe" loading="lazy" title="DSOG STORES Workspace Content"></iframe>
         </div>
       </main>
 
@@ -894,7 +1045,7 @@
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 
   <script>
-    // Your Firebase configuration (same as in index.html)
+    // Firebase configuration
     const firebaseConfig = {
       apiKey: "AIzaSyCOb4BqfiN3vt1Y13UTEpA_boCqNRH6rrQ",
       authDomain: "dsog-stores-dashboard.firebaseapp.com",
@@ -909,25 +1060,60 @@
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
     
+    // DOM elements
+    const authLoader = document.getElementById('authLoader');
+    const accessDenied = document.getElementById('accessDenied');
+    const workspaceContainer = document.getElementById('workspaceContainer');
+    const sheetLoader = document.getElementById('sheetLoader');
+    const sheetLoaderText = document.getElementById('sheetLoaderText');
+    const currentSheetInfo = document.getElementById('currentSheetInfo');
+    const iframe = document.getElementById('iframe');
+    
+    // Show auth loader initially
+    authLoader.style.display = 'flex';
+    accessDenied.style.display = 'none';
+    workspaceContainer.style.display = 'none';
+    
+    // Track current sheet info
+    let currentSheetName = '';
+    let currentSheetUrl = '';
+    
     // Authentication state observer
+    let authCheckTimeout;
+    
     auth.onAuthStateChanged((user) => {
+      // Clear any existing timeout
+      clearTimeout(authCheckTimeout);
+      
       if (user) {
-        // User is signed in - show workspace
-        handleUserSignedIn(user);
+        // User is signed in - show workspace after a short delay
+        setTimeout(() => {
+          handleUserSignedIn(user);
+        }, 800);
       } else {
-        // User is signed out - show access denied
-        handleUserSignedOut();
+        // User is signed out - show access denied after a short delay
+        setTimeout(() => {
+          handleUserSignedOut();
+        }, 800);
       }
     });
+    
+    // Set a timeout in case Firebase auth takes too long
+    authCheckTimeout = setTimeout(() => {
+      const currentUser = auth.currentUser;
+      if (!currentUser) {
+        handleUserSignedOut();
+      }
+    }, 3000);
 
     function handleUserSignedIn(user) {
       console.log("User signed in:", user.email);
       
-      // Hide access denied message
-      document.getElementById('accessDenied').style.display = 'none';
+      // Hide auth loader
+      authLoader.style.display = 'none';
       
       // Show workspace content
-      document.getElementById('workspaceContainer').style.display = 'flex';
+      workspaceContainer.style.display = 'flex';
       
       // Update user email display
       document.getElementById('userEmail').textContent = user.email;
@@ -939,18 +1125,20 @@
     function handleUserSignedOut() {
       console.log("User signed out");
       
+      // Hide auth loader
+      authLoader.style.display = 'none';
+      
       // Show access denied message
-      document.getElementById('accessDenied').style.display = 'flex';
+      accessDenied.style.display = 'flex';
       
       // Hide workspace content
-      document.getElementById('workspaceContainer').style.display = 'none';
+      workspaceContainer.style.display = 'none';
     }
 
     // Logout functionality
     document.getElementById('logoutBtn').addEventListener('click', function() {
       auth.signOut()
         .then(() => {
-          // Redirect to home page after logout
           window.location.href = 'index.html';
         })
         .catch((error) => {
@@ -993,6 +1181,11 @@
             name: "Void Transactions", 
             link: "void-transactions",
             sheetUrl: "https://docs.google.com/spreadsheets/d/1KVnZUXasm0HqXrskp7cdTrFYiGzrZs07qSzbnV9DNIs/edit" 
+          },
+          { 
+            name: "Transaction Search", 
+            link: "transaction-search",
+            sheetUrl: "https://docs.google.com/spreadsheets/d/1TRANSACTION_SEARCH_SHEET_ID/edit" 
           }
         ]
       },
@@ -1030,6 +1223,11 @@
             name: "Customer Groups", 
             link: "customer-groups",
             sheetUrl: "https://docs.google.com/spreadsheets/d/1M1pHs_X8yg72RMmW6LHyz3Zb8qbJN5pteIaJg977Xbk/edit" 
+          },
+          { 
+            name: "Customer Activity", 
+            link: "customer-activity",
+            sheetUrl: "https://docs.google.com/spreadsheets/d/1CUSTOMER_ACTIVITY_SHEET_ID/edit" 
           }
         ]
       },
@@ -1045,6 +1243,11 @@
             name: "Payment Tracking", 
             link: "payment-tracking",
             sheetUrl: "https://docs.google.com/spreadsheets/d/1Fhpzj-Dm5YFOIRUYSHVNWyImj0uMUaGdeB3dFIDAGMM/edit" 
+          },
+          { 
+            name: "Invoice Archive", 
+            link: "invoice-archive",
+            sheetUrl: "https://docs.google.com/spreadsheets/d/1INVOICE_ARCHIVE_SHEET_ID/edit" 
           }
         ]
       },
@@ -1078,6 +1281,16 @@
             link: "product-details",
             sheetUrl: "https://docs.google.com/spreadsheets/d/1TaYcki7lJ1kC4q8mfNly_d_e1a7PcYV8oHotLtom5R4/edit" 
           },
+          { 
+            name: "Product Categories", 
+            link: "product-categories",
+            sheetUrl: "https://docs.google.com/spreadsheets/d/1PRODUCT_CATEGORIES_SHEET_ID/edit" 
+          },
+          { 
+            name: "Product Search", 
+            link: "product-search",
+            sheetUrl: "https://docs.google.com/spreadsheets/d/1PRODUCT_SEARCH_SHEET_ID/edit" 
+          }
         ]
       },
       "pricing": {
@@ -1093,6 +1306,11 @@
             link: "price-updates",
             sheetUrl: "https://docs.google.com/spreadsheets/d/177srRZ_v9oaomBg7Osn3ut9gdAHB_zFXlhgvcmRmhkk/edit" 
           },
+          { 
+            name: "Competitive Pricing", 
+            link: "competitive-pricing",
+            sheetUrl: "https://docs.google.com/spreadsheets/d/1COMPETITIVE_PRICING_SHEET_ID/edit" 
+          }
         ]
       },
       "specials": {
@@ -1244,7 +1462,6 @@
     // Initialize workspace functionality
     function initWorkspace() {
       // DOM elements
-      const iframe = document.getElementById("iframe");
       const dropdown = document.getElementById("dropdown");
       const menuToggle = document.getElementById("menuToggle");
       const menuContent = document.getElementById("menuContent");
@@ -1259,11 +1476,40 @@
         loadInitialSection();
         updateClock();
         setInterval(updateClock, 60000); // Update time every minute
+        
+        // Set up iframe load event listeners
+        setupIframeEvents();
+      }
+
+      // Set up iframe load event listeners
+      function setupIframeEvents() {
+        iframe.addEventListener('load', function() {
+          // Hide sheet loader when iframe is fully loaded
+          setTimeout(() => {
+            sheetLoader.style.display = 'none';
+            // Show current sheet info
+            if (currentSheetName) {
+              currentSheetInfo.textContent = currentSheetName;
+              currentSheetInfo.style.display = 'block';
+            }
+          }, 500); // Small delay for smoother transition
+        });
+        
+        iframe.addEventListener('loadstart', function() {
+          // Show sheet loader when iframe starts loading
+          sheetLoader.style.display = 'flex';
+          currentSheetInfo.style.display = 'none';
+        });
+        
+        iframe.addEventListener('error', function() {
+          // Hide sheet loader on error
+          sheetLoader.style.display = 'none';
+          currentSheetInfo.style.display = 'none';
+        });
       }
 
       // Set up all event listeners
       function setupEventListeners() {
-        // Navigation section clicks
         document.querySelectorAll(".nav-section-title").forEach(title => {
           title.addEventListener("click", function(e) {
             e.stopPropagation();
@@ -1275,7 +1521,6 @@
           });
         });
 
-        // Nav link clicks
         navLinks.forEach(link => {
           link.addEventListener("click", function(e) {
             e.preventDefault();
@@ -1283,7 +1528,6 @@
           });
         });
 
-        // Tool clicks
         menuContent.addEventListener("click", function(e) {
           if (e.target.tagName === 'A') {
             e.preventDefault();
@@ -1291,25 +1535,20 @@
           }
         });
 
-        // Toggle dropdown
         menuToggle.addEventListener("click", function(e) {
           e.stopPropagation();
           dropdown.classList.toggle("open");
         });
 
-        // Close dropdown when clicking outside
         document.addEventListener("click", function() {
           dropdown.classList.remove("open");
         });
       }
 
-      // Handle navigation link clicks
       function handleNavLinkClick(link) {
-        // Update active states
         navLinks.forEach(l => l.classList.remove("active"));
         link.classList.add("active");
         
-        // Update content
         const section = link.dataset.section;
         const data = moduleData[section];
         
@@ -1318,16 +1557,13 @@
           return;
         }
         
-        // Update tools dropdown
         updateToolsMenu(data.tools);
         
-        // Load the first tool's content by default
         if (data.tools.length > 0) {
-          loadToolContent(data.tools[0].sheetUrl);
+          loadToolContent(data.tools[0].sheetUrl, data.tools[0].name);
         }
       }
 
-      // Update the tools dropdown menu
       function updateToolsMenu(tools) {
         menuContent.innerHTML = '';
         tools.forEach(tool => {
@@ -1336,24 +1572,37 @@
           link.textContent = tool.name;
           link.dataset.link = tool.link;
           link.dataset.sheetUrl = tool.sheetUrl;
+          link.dataset.sheetName = tool.name;
           menuContent.appendChild(link);
         });
       }
 
-      // Handle tool selection
       function handleToolClick(toolElement) {
         dropdown.classList.remove("open");
         const sheetUrl = toolElement.dataset.sheetUrl;
-        loadToolContent(sheetUrl);
+        const sheetName = toolElement.dataset.sheetName;
+        loadToolContent(sheetUrl, sheetName);
       }
 
-      // Load content for a tool
-      function loadToolContent(sheetUrl) {
+      function loadToolContent(sheetUrl, sheetName) {
+        currentSheetName = sheetName || 'Sheet';
+        currentSheetUrl = sheetUrl;
+        
+        // Show sheet loader with specific text
+        sheetLoaderText.textContent = `Loading ${currentSheetName}...`;
+        sheetLoader.style.display = 'flex';
+        currentSheetInfo.style.display = 'none';
+        
         if (sheetUrl && sheetUrl.includes('docs.google.com')) {
           const sheetId = extractSheetId(sheetUrl);
           if (sheetId) {
-            // Load the sheet with full toolbar
-            iframe.src = `https://docs.google.com/spreadsheets/d/${sheetId}/edit?usp=sharing`;
+            // Clear iframe first to trigger loadstart event
+            iframe.src = '';
+            
+            // Small delay to ensure loadstart event fires
+            setTimeout(() => {
+              iframe.src = `https://docs.google.com/spreadsheets/d/${sheetId}/edit?usp=sharing`;
+            }, 100);
           } else {
             showPlaceholderContent("Invalid Google Sheet URL format");
           }
@@ -1362,8 +1611,10 @@
         }
       }
 
-      // Show placeholder content
       function showPlaceholderContent(message) {
+        sheetLoader.style.display = 'none';
+        currentSheetInfo.style.display = 'none';
+        
         iframe.srcdoc = `
           <!DOCTYPE html>
           <html>
@@ -1411,7 +1662,6 @@
         `;
       }
 
-      // Update clock
       function updateClock() {
         const now = new Date();
         let hours = now.getHours();
@@ -1426,7 +1676,6 @@
         dateElement.textContent = now.toLocaleDateString('en-US', options);
       }
 
-      // Helper function to extract sheet ID from URL
       function extractSheetId(url) {
         try {
           const match = url.match(/\/spreadsheets\/d\/([a-zA-Z0-9-_]+)/);
@@ -1437,13 +1686,11 @@
         }
       }
 
-      // Load initial section
       function loadInitialSection() {
         const activeLink = document.querySelector('.nav-link.active');
         if (activeLink) {
           handleNavLinkClick(activeLink);
         } else if (navLinks.length > 0) {
-          // Activate first link if none is active
           navLinks[0].classList.add("active");
           handleNavLinkClick(navLinks[0]);
         }
